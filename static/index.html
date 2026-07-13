@@ -1,0 +1,140 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Kronos Vibe Coder</title>
+    <style>
+      body { font-family: Arial, sans-serif; margin: 24px; }
+      .panel { max-width: 800px; margin: auto; }
+      textarea { width: 100%; height: 120px; }
+      input[type=text] { width: 80%; }
+      button { padding: 8px 12px; }
+      .job { border: 1px solid #ddd; padding: 8px; margin-top: 8px; }
+    </style>
+  </head>
+  <body>
+    <div class="panel">
+      <h1>Kronos Vibe Coder</h1>
+
+      <div>
+        <button id="loginBtn">Sign in with GitHub</button>
+        <span id="whoami" style="margin-left:12px"></span>
+      </div>
+
+      <h3>Submit repository (https://github.com/owner/repo)</h3>
+      <input id="repoUrl" type="text" placeholder="https://github.com/owner/repo" />
+      <button id="submitBtn">Submit</button>
+
+      <h3>Or upload files / paste code</h3>
+      <input id="fileInput" type="file" multiple />
+      <div style="margin-top:8px">
+        <textarea id="chatInput" placeholder="Paste code or notes here..."></textarea>
+      </div>
+      <button id="uploadBtn">Upload / Scan</button>
+
+      <div id="jobs"></div>
+    </div>
+
+    <script>
+      let CSRF_TOKEN = null;
+      async function refreshWhoami(){
+        try{
+          const r = await fetch('/whoami');
+          const j = await r.json();
+          CSRF_TOKEN = j.csrf_token || CSRF_TOKEN;
+          if(j.authenticated){
+            document.getElementById('whoami').innerText = 'Signed in: ' + (j.login || j.name || j.avatar_url || '');
+            document.getElementById('loginBtn').innerText = 'Sign out';
+            document.getElementById('loginBtn').onclick = function(){
+              // clear session by calling a small endpoint (reload to pick up session state)
+              fetch('/github/logout', {method:'POST'}).then(()=>location.reload());
+            }
+          } else {
+            document.getElementById('whoami').innerText = '';
+            document.getElementById('loginBtn').innerText = 'Sign in with GitHub';
+            document.getElementById('loginBtn').onclick = function(){ window.location.href = '/github/login'; }
+          }
+        }catch(e){ console.warn(e) }
+      }
+      refreshWhoami();
+
+
+      document.getElementById('submitBtn').onclick = async function(){
+        const url = document.getElementById('repoUrl').value;
+        if(!url) return alert('Enter repo URL');
+
+        const headers = {'Content-Type':'application/json'};
+        if(CSRF_TOKEN) headers['X-CSRF-Token'] = CSRF_TOKEN;
+        const resp = await fetch('/submit_project', { method: 'POST', headers, body: JSON.stringify({url}) });
+        const data = await resp.json();
+        const jobDiv = document.createElement('div');
+        jobDiv.className = 'job';
+        jobDiv.id = 'job-' + data.job_id;
+        jobDiv.innerHTML = `<b>Job:</b> ${data.job_id} <div class="status">queued</div> <button class="statusBtn">Refresh</button> <button class="deployBtn">Deploy (create branch & PR)</button>`;
+        document.getElementById('jobs').prepend(jobDiv);
+
+        jobDiv.querySelector('.statusBtn').onclick = async function(){
+          const res = await fetch('/job_status/' + data.job_id);
+          const j = await res.json();
+          jobDiv.querySelector('.status').innerText = JSON.stringify(j, null, 2);
+        }
+
+        // auto-refresh every 5 seconds
+        const iv = setInterval(async ()=>{
+          try{
+            const res = await fetch('/job_status/' + data.job_id);
+            if(!res.ok) return;
+            const j = await res.json();
+            jobDiv.querySelector('.status').innerText = JSON.stringify(j, null, 2);
+            if(j.status && (j.status==='completed' || j.status==='failed')) clearInterval(iv);
+          }catch(e){ console.warn(e) }
+        }, 5000);
+
+        jobDiv.querySelector('.deployBtn').onclick = async function(){
+          const repo = prompt('Enter repository full name (owner/repo) to push changes to', url.replace('https://github.com/',''));
+          if(!repo) return;
+          const headers = {'Content-Type':'application/json'};
+          if(CSRF_TOKEN) headers['X-CSRF-Token'] = CSRF_TOKEN;
+          const res = await fetch('/deploy_confirm', {method:'POST', headers, body: JSON.stringify({job_id: data.job_id, repo})});
+          const r = await res.json();
+          if(res.ok) alert('Deployed: ' + JSON.stringify(r.pr)); else alert('Error: ' + JSON.stringify(r));
+        }
+      }
+
+      document.getElementById('uploadBtn').onclick = async function(){
+        const files = document.getElementById('fileInput').files;
+        const text = document.getElementById('chatInput').value;
+        if(!files.length && !text) return alert('Provide files or paste code');
+        const fd = new FormData();
+        for(let i=0;i<files.length;i++) fd.append('files', files[i]);
+        if(text) fd.append('text', text);
+
+        const headers = {};
+        if(CSRF_TOKEN) headers['X-CSRF-Token'] = CSRF_TOKEN;
+        const resp = await fetch('/upload_files', {method:'POST', headers, body: fd});
+        const data = await resp.json();
+        const jobDiv = document.createElement('div');
+        jobDiv.className = 'job';
+        jobDiv.id = 'job-' + data.job_id;
+        jobDiv.innerHTML = `<b>Job:</b> ${data.job_id} <div class="status">queued</div> <button class="statusBtn">Refresh</button> <button class="deployBtn">Deploy (create branch & PR)</button>`;
+        document.getElementById('jobs').prepend(jobDiv);
+
+        jobDiv.querySelector('.statusBtn').onclick = async function(){
+          const res = await fetch('/job_status/' + data.job_id);
+          const j = await res.json();
+          jobDiv.querySelector('.status').innerText = JSON.stringify(j, null, 2);
+        }
+
+        jobDiv.querySelector('.deployBtn').onclick = async function(){
+          const repo = prompt('Enter repository full name (owner/repo) to push changes to', '');
+          if(!repo) return;
+          const headers = {'Content-Type':'application/json'};
+          if(CSRF_TOKEN) headers['X-CSRF-Token'] = CSRF_TOKEN;
+          const res = await fetch('/deploy_confirm', {method:'POST', headers, body: JSON.stringify({job_id: data.job_id, repo})});
+          const r = await res.json();
+          if(res.ok) alert('Deployed: ' + JSON.stringify(r.pr)); else alert('Error: ' + JSON.stringify(r));
+        }
+      }
+    </script>
+  </body>
+</html>
