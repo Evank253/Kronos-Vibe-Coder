@@ -3,6 +3,7 @@ import shutil
 import subprocess
 import tempfile
 from collections import Counter
+from datetime import datetime, timezone
 from pathlib import Path
 
 from backend.agents.repo_analyzer import analyze_repo
@@ -25,6 +26,14 @@ def clone_repository(repo_url):
         raise RuntimeError(exc.stderr.strip() or exc.stdout.strip())
 
     return clone_path
+
+
+def generate_report(data):
+    return {
+        "generated": datetime.now(timezone.utc).isoformat(),
+        "kronos_report": data,
+        "status": "complete",
+    }
 
 
 def detect_languages(path: Path):
@@ -129,18 +138,27 @@ def is_deployment_ready(path: Path):
     return len(workflows) > 0
 
 
-def create_report(repo_url: str):
-    clone_path = clone_repository(repo_url)
-    try:
-        analysis = analyze_repo(str(clone_path))
-        issues = debug_project({"repo": str(clone_path)})["issues_found"]
-        return {
-            "repository": clone_path.name,
-            "files_found": analysis["files_found"],
-            "languages": detect_languages(clone_path),
-            "frameworks": detect_frameworks(clone_path),
-            "issues": issues,
-            "deployment_status": "ready" if is_deployment_ready(clone_path) else "not ready",
-        }
-    finally:
-        shutil.rmtree(clone_path.parent, ignore_errors=True)
+def detect_tests(path: Path):
+    test_patterns = ["test_*.py", "*_test.py", "pytest.ini", "tox.ini", "unittest"]
+    for pattern in test_patterns:
+        if any(path.rglob(pattern)):
+            return True
+    return False
+
+
+def create_report(path: Path):
+    analysis = analyze_repo(str(path))
+    issues = debug_project({"repo": str(path)})["issues_found"]
+    return {
+        "repository": path.name,
+        "status": "scanned",
+        "files_found": analysis["files_found"],
+        "languages": detect_languages(path),
+        "frameworks": detect_frameworks(path),
+        "deployment_checks": {
+            "docker": (path / "Dockerfile").exists() or (path / "docker-compose.yml").exists(),
+            "environment_file": (path / ".env").exists(),
+            "tests": detect_tests(path),
+        },
+        "issues": issues,
+    }

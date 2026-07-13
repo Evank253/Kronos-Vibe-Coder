@@ -2,3 +2,11 @@ fastapi
 uvicorn
 PyGithub
 pydantic
+pytest
+requests
+itsdangerous
+redis
+pytest-mock
+pytest-asyncio
+sentry-sdk
+python-multipart
