@@ -1,8 +1,8 @@
 (function(){
-  const MAX_POLLS = 240;
+  const MAX_POLL_ATTEMPTS_2MIN = 240;
   async function wait(ms){ return new Promise(resolve=>setTimeout(resolve, ms)); }
   async function pollStatus(taskId, onMessage){
-    for(let attempt = 0; attempt < MAX_POLLS; attempt += 1){
+    for(let attempt = 0; attempt < MAX_POLL_ATTEMPTS_2MIN; attempt += 1){
       const response=await fetch(`/vibe/status/${taskId}`);
       const payload=await response.json();
       onMessage(payload);

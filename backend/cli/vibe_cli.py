@@ -11,6 +11,7 @@ from backend.codespace_adapter import dashboard_url, resolve_workspace_path
 
 
 CLI_MANAGER = SwarmTaskManager()
+WATCH_TIMEOUT_SECONDS = 300
 
 
 def _wait_for_completion(task_id: str) -> dict:
@@ -56,7 +57,7 @@ def command_dashboard(args: argparse.Namespace) -> int:
 
 def command_watch(args: argparse.Namespace) -> int:
     task = CLI_MANAGER.create_task(resolve_workspace_path(args.path))
-    deadline = time.time() + 300
+    deadline = time.time() + WATCH_TIMEOUT_SECONDS
     while time.time() < deadline:
         snapshot = CLI_MANAGER.get_task(task["task_id"])
         print(json.dumps(snapshot["summary"], indent=2))

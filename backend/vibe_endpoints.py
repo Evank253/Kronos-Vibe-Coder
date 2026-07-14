@@ -1,13 +1,12 @@
 from __future__ import annotations
 
 import asyncio
-from pathlib import Path
 from typing import Any
 
 from fastapi import APIRouter, HTTPException, WebSocket, WebSocketDisconnect
 
 from backend.agents.swarm.task_manager import SwarmTaskManager
-from backend.codespace_adapter import dashboard_url, is_codespace, resolve_workspace_path, workspace_root
+from backend.codespace_adapter import dashboard_url, is_codespace, workspace_root
 
 
 router = APIRouter(prefix="/vibe", tags=["vibe"])
@@ -17,12 +16,9 @@ TASK_MANAGER = SwarmTaskManager()
 @router.post("/scan-and-fix")
 def scan_and_fix(data: dict[str, Any] | None = None):
     payload = data or {}
-    try:
-        root_path = resolve_workspace_path(payload.get("path") or workspace_root())
-    except ValueError as exc:
-        raise HTTPException(status_code=400, detail=str(exc)) from exc
-    if not root_path.exists():
-        raise HTTPException(status_code=404, detail="Path not found")
+    if payload.get("path") not in {None, "", "."}:
+        raise HTTPException(status_code=400, detail="API scans are limited to the workspace root")
+    root_path = workspace_root()
     task = TASK_MANAGER.create_task(root_path)
     return {
         "task_id": task["task_id"],

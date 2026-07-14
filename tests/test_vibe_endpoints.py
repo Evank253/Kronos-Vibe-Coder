@@ -7,6 +7,7 @@ from backend.vibe_endpoints import TASK_MANAGER
 
 
 client = TestClient(app)
+TEST_TIMEOUT_SECONDS = 5
 
 
 def test_scan_and_fix_status_and_merge(tmp_path, monkeypatch):
@@ -25,7 +26,7 @@ def test_scan_and_fix_status_and_merge(tmp_path, monkeypatch):
     payload = response.json()
     assert payload["task_id"]
 
-    deadline = time.time() + 5
+    deadline = time.time() + TEST_TIMEOUT_SECONDS
     status_payload = None
     while time.time() < deadline:
         status_response = client.get(f"/vibe/status/{payload['task_id']}")

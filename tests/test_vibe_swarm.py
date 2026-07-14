@@ -3,6 +3,8 @@ import time
 from backend.agents.swarm.scanner import SwarmScanner
 from backend.agents.swarm.task_manager import SwarmTaskManager
 
+TEST_TIMEOUT_SECONDS = 5
+
 
 def test_swarm_scanner_detects_builtin_issues(tmp_path):
     project = tmp_path / "project"
@@ -81,7 +83,7 @@ def test_task_manager_prefers_higher_priority_change(tmp_path, monkeypatch):
     )
 
     task = manager.create_task(project)
-    deadline = time.time() + 5
+    deadline = time.time() + TEST_TIMEOUT_SECONDS
     while time.time() < deadline:
         snapshot = manager.get_task(task["task_id"])
         if snapshot["status"] in {"completed", "completed_with_errors", "failed"}:

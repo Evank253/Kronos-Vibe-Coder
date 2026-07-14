@@ -120,7 +120,12 @@ class SwarmScanner:
                         )
                         break
 
-            if path.name == ".env" or secret_pattern.search(content) or jwt_pattern.search(content) or aws_pattern.search(content):
+            if (
+                path.name == ".env"
+                or secret_pattern.search(content)
+                or jwt_pattern.search(content)
+                or aws_pattern.search(content)
+            ):
                 issues.append(
                     Issue(
                         tool="builtin",

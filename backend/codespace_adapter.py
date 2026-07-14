@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
+import re
 
 
 _BLOCKED_ROOTS = {
@@ -12,6 +13,7 @@ _BLOCKED_ROOTS = {
     Path("/run"),
     Path("/boot"),
 }
+_SAFE_PATH_PART = re.compile(r"^[A-Za-z0-9._-]+$")
 
 
 def is_codespace() -> bool:
@@ -44,7 +46,13 @@ def resolve_workspace_path(raw_path: str | os.PathLike[str] | None) -> Path:
     requested = Path(str(raw_path or "."))
     if requested.is_absolute():
         raise ValueError("Path must be relative to the workspace root")
-    candidate = (workspace_root() / requested).resolve()
+    candidate = workspace_root()
+    for part in requested.parts:
+        if part in {"", "."}:
+            continue
+        if part == ".." or not _SAFE_PATH_PART.fullmatch(part):
+            raise ValueError(f"Path segment '{part}' is not allowed")
+        candidate = candidate / part
     for blocked in _BLOCKED_ROOTS:
         try:
             candidate.relative_to(blocked)
@@ -65,7 +73,7 @@ def resolve_workspace_path(raw_path: str | os.PathLike[str] | None) -> Path:
         except ValueError:
             continue
 
-    raise ValueError(f"Path '{candidate}' must stay within the workspace or /tmp")
+    raise ValueError(f"Path '{candidate}' must stay within the workspace")
 
 
 def dashboard_url(task_id: str | None = None) -> str:
