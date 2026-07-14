@@ -79,7 +79,6 @@ class SecretsManager:
         fd = os.open(self.vault_path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
         with os.fdopen(fd, "wb") as vault_file:
             vault_file.write(vault_data)
-        os.chmod(self.vault_path, 0o600)
         self._cache = dict(secrets)
 
     @staticmethod
