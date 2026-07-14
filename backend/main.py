@@ -105,6 +105,9 @@ if os.getenv("REDIS_URL"):
     except Exception:
         logger.exception("Failed to initialize Redis session store")
 
+# Set to True via HTTPS_ONLY=1 in production so session cookies get secure flag
+_SECURE_COOKIES = os.getenv("HTTPS_ONLY", "0") == "1"
+
 
 @app.get("/healthz")
 def healthz():
@@ -144,8 +147,9 @@ def scan_repo(data: dict):
 
     try:
         return scan_repository(repo_url)
-    except Exception as exc:
-        raise HTTPException(status_code=500, detail=str(exc))
+    except Exception:
+        logger.exception("scan_repo failed for %s", repo_url)
+        raise HTTPException(status_code=500, detail="Repository scan failed")
 
 
 @app.post("/github/create_branch")
@@ -161,8 +165,11 @@ def github_create_branch(data: dict):
 
     try:
         return create_branch(repo, branch, base)
-    except Exception as exc:
-        raise HTTPException(status_code=500, detail=str(exc))
+    except Exception:
+        logger.exception("Operation failed")
+        raise HTTPException(
+            status_code=500, detail="An internal error occurred"
+        )
 
 
 @app.post("/github/commit")
@@ -179,8 +186,11 @@ def github_commit(data: dict):
 
     try:
         return commit_changes(repo, branch, message, changes)
-    except Exception as exc:
-        raise HTTPException(status_code=500, detail=str(exc))
+    except Exception:
+        logger.exception("Operation failed")
+        raise HTTPException(
+            status_code=500, detail="An internal error occurred"
+        )
 
 
 @app.post("/github/open_pr")
@@ -198,8 +208,11 @@ def github_open_pr(data: dict):
 
     try:
         return open_pull_request(repo, title, body, head, base)
-    except Exception as exc:
-        raise HTTPException(status_code=500, detail=str(exc))
+    except Exception:
+        logger.exception("Operation failed")
+        raise HTTPException(
+            status_code=500, detail="An internal error occurred"
+        )
 
 
 @app.post("/fix_plan")
@@ -259,7 +272,13 @@ def github_login(request: Request):
         sess["oauth_state"] = state
         SESSION_STORE.set(sid, sess)
         response = RedirectResponse(redirect)
-        response.set_cookie("session_id", sid, httponly=True)
+        response.set_cookie(
+            "session_id",
+            sid,
+            httponly=True,
+            samesite="lax",
+            secure=_SECURE_COOKIES,
+        )
         return response
     else:
         request.session["oauth_state"] = state
@@ -309,7 +328,13 @@ def github_callback(request: Request, code: str = None, state: str = None):
         sess["github_token"] = access_token
         SESSION_STORE.set(sid, sess)
         response = RedirectResponse("/")
-        response.set_cookie("session_id", sid, httponly=True)
+        response.set_cookie(
+            "session_id",
+            sid,
+            httponly=True,
+            samesite="lax",
+            secure=_SECURE_COOKIES,
+        )
         return response
     else:
         request.session["github_token"] = access_token
@@ -429,7 +454,7 @@ def job_status(job_id: str):
 @app.post("/deploy_confirm")
 def deploy_confirm(request: Request, data: dict):
     job_id = data.get("job_id")
-    data.get("action", "open_pr")  # reserved for future action routing
+    # action = data.get("action", "open_pr")  # reserved for future action routing
 
     job = JOBS.get(job_id)
     if not job:
@@ -481,8 +506,11 @@ def deploy_confirm(request: Request, data: dict):
             "pr": pr,
         }
         return {"status": "deployed", "pr": pr}
-    except Exception as exc:
-        raise HTTPException(status_code=500, detail=str(exc))
+    except Exception:
+        logger.exception("Operation failed")
+        raise HTTPException(
+            status_code=500, detail="An internal error occurred"
+        )
 
 
 @app.get("/whoami")

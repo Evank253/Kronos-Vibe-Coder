@@ -4,9 +4,33 @@ Uses an OpenAI-compatible API (configurable via environment variables).
 Falls back to a rule-based summary when no API key is configured.
 """
 
+import json
 import os
 import subprocess
+import urllib.request
 from pathlib import Path
+
+# Tuneable limits
+MAX_LINT_ISSUES_TO_SHOW = 20
+MAX_STDOUT_CHARS = 3000
+MAX_STDERR_CHARS = 1000
+DEFAULT_MAX_TOKENS = 1024
+
+# Deny-list of root paths that should never be analyzed
+_BLOCKED_PATH_PREFIXES = ("/etc", "/sys", "/proc", "/dev", "/run", "/boot")
+
+
+def _safe_resolve(path: str) -> Path | None:
+    """Resolve *path* to an absolute Path; return None if it looks unsafe."""
+    try:
+        resolved = Path(path).resolve()
+    except (OSError, ValueError):
+        return None
+    # Block obviously sensitive system paths
+    for blocked in _BLOCKED_PATH_PREFIXES:
+        if str(resolved).startswith(blocked):
+            return None
+    return resolved
 
 
 def _call_llm(system: str, user: str) -> str:
@@ -22,9 +46,6 @@ def _call_llm(system: str, user: str) -> str:
         return "[AI suggestions unavailable: set AI_API_KEY to enable LLM responses]"
 
     try:
-        import urllib.request
-        import json
-
         base_url = os.getenv(
             "AI_BASE_URL", "https://api.openai.com/v1"
         ).rstrip("/")
@@ -36,7 +57,7 @@ def _call_llm(system: str, user: str) -> str:
                     {"role": "system", "content": system},
                     {"role": "user", "content": user},
                 ],
-                "max_tokens": 1024,
+                "max_tokens": DEFAULT_MAX_TOKENS,
             }
         ).encode()
 
@@ -65,8 +86,6 @@ def _run_ruff(path: str) -> dict:
             text=True,
             timeout=60,
         )
-        import json
-
         issues = json.loads(result.stdout) if result.stdout.strip() else []
         return {"tool": "ruff", "issues": issues, "count": len(issues)}
     except FileNotFoundError:
@@ -93,8 +112,8 @@ def _run_pytest(path: str) -> dict:
         return {
             "tool": "pytest",
             "returncode": result.returncode,
-            "stdout": result.stdout[-3000:],
-            "stderr": result.stderr[-1000:],
+            "stdout": result.stdout[-MAX_STDOUT_CHARS:],
+            "stderr": result.stderr[-MAX_STDERR_CHARS:],
             "passed": result.returncode == 0,
         }
     except FileNotFoundError:
@@ -105,18 +124,21 @@ def _run_pytest(path: str) -> dict:
 
 def analyze_path(path: str) -> dict:
     """Run all available checks on a local path and return a summary."""
-    p = Path(path)
-    if not p.exists():
-        return {"error": f"Path not found: {path}"}
+    safe = _safe_resolve(path)
+    if safe is None or not safe.exists():
+        return {"error": f"Path not found or not permitted: {path}"}
 
-    lint = _run_ruff(path)
-    tests = _run_pytest(path) if p.is_dir() else {}
+    # Use the resolved (safe) string path for all subprocess calls
+    safe_path = str(safe)
+
+    lint = _run_ruff(safe_path)
+    tests = _run_pytest(safe_path) if safe.is_dir() else {}
 
     # collect file list
     files = []
-    if p.is_dir():
-        for fp in sorted(p.rglob("*.py")):
-            files.append(str(fp.relative_to(p)))
+    if safe.is_dir():
+        for fp in sorted(safe.rglob("*.py")):
+            files.append(str(fp.relative_to(safe)))
 
     summary_parts = []
     if lint.get("count", 0):
@@ -133,7 +155,7 @@ def analyze_path(path: str) -> dict:
             summary_parts.append("Some tests failed.")
 
     return {
-        "path": path,
+        "path": safe_path,
         "python_files": files,
         "lint": lint,
         "tests": tests,
@@ -149,18 +171,21 @@ def suggest_fixes(analysis: dict) -> dict:
 
     # Build a compact problem description
     issues_text = ""
-    for issue in lint.get("issues", [])[:20]:
-        loc = f"{issue.get('filename', '?')}:{issue.get('location', {}).get('row', '?')}"
+    for issue in lint.get("issues", [])[:MAX_LINT_ISSUES_TO_SHOW]:
+        loc = (
+            f"{issue.get('filename', '?')}"
+            f":{issue.get('location', {}).get('row', '?')}"
+        )
         code = issue.get("code", "?")
         msg = issue.get("message", "")
         issues_text += f"  {loc} [{code}] {msg}\n"
 
-    test_output = tests.get("stdout", "")[:1500]
+    test_output = tests.get("stdout", "")[: MAX_STDOUT_CHARS // 2]
 
     user_prompt = f"""Repository analysis summary:
 {summary}
 
-Lint issues (up to 20 shown):
+Lint issues (up to {MAX_LINT_ISSUES_TO_SHOW} shown):
 {issues_text or "  None"}
 
 Test output:
