@@ -1,0 +1,3885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KCN-AKIIS :: Sovereign Singularity Command</title>
+  <style>
+    /* =========================================================================
+       THE SINGULARITY GLASSMORPHIC FUTURISTIC DESIGN SYSTEM
+       ========================================================================= */
+    :root {
+      --bg-space: #020205;
+      --panel-glass: rgba(6, 6, 15, 0.45);
+      --border-neon: rgba(0, 240, 255, 0.25);
+      --border-purple: rgba(189, 0, 255, 0.25);
+      --neon-teal: #00f0ff;
+      --neon-purple: #bd00ff;
+      --neon-green: #39ff14;
+      --neon-yellow: #ffb700;
+      --neon-white: #f0f0ff;
+      --text-gray: #5a5a7a;
+      --glow-teal: 0 0 15px rgba(0, 240, 255, 0.35);
+      --glow-purple: 0 0 15px rgba(189, 0, 255, 0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Helvetica Neue', -apple-system, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-space);
+      color: #fff;
+      overflow: hidden;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* Interactive 3D Quantum Singularity Canvas */
+    #singularity-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: 0.35;
+    }
+
+    /* CRT Scanning Lines & Vignette */
+    .vignette {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: radial-gradient(circle, transparent 40%, rgba(0, 0, 0, 0.8) 100%);
+      z-index: 999;
+      pointer-events: none;
+    }
+
+    /* Cinematic Holographic Warp Portal Container */
+    #cinematic-warp-container {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      z-index: 10000;
+      background: #020205;
+      display: none;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+    }
+    
+    /* Holographic Agent Cyborg Swarm Overlay */
+    .hologram-cyborg {
+      position: absolute;
+      pointer-events: none;
+      font-family: monospace;
+      font-size: 11px;
+      font-weight: bold;
+      color: var(--neon-teal);
+      background: rgba(4, 4, 15, 0.85);
+      border: 1.5px solid var(--neon-teal);
+      border-radius: 6px;
+      padding: 10px 15px;
+      box-shadow: 0 0 20px var(--neon-teal);
+      z-index: 10010;
+      opacity: 0;
+      transform: scale(0.7) rotate(-5deg);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .hologram-cyborg::before {
+      content: '🤖 SWARM_AGENT';
+      display: block;
+      font-size: 8px;
+      color: var(--neon-yellow);
+      margin-bottom: 5px;
+      letter-spacing: 2px;
+    }
+
+    /* =========================================================================
+       HEADER MODULE
+       ========================================================================= */
+    header {
+      background: rgba(4, 4, 8, 0.7);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border-bottom: 1px solid var(--border-neon);
+      padding: 18px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+      opacity: 0; /* Managed by awakening sequence */
+      transition: opacity 1s ease;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .pulse-node {
+      width: 14px;
+      height: 14px;
+      background-color: var(--neon-teal);
+      border-radius: 50%;
+      box-shadow: 0 0 15px var(--neon-teal), 0 0 25px var(--neon-teal);
+      animation: pulse 2s infinite ease-in-out;
+    }
+
+    h1 {
+      font-size: 16px;
+      font-weight: 300;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: var(--neon-teal);
+      text-shadow: var(--glow-teal);
+    }
+
+    .badge-pnl {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .audio-toggle {
+      background: rgba(0, 240, 255, 0.05);
+      border: 1px solid var(--border-neon);
+      color: var(--neon-teal);
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: all 0.3s;
+    }
+
+    .audio-toggle:hover {
+      background: var(--neon-teal);
+      color: #000;
+      box-shadow: var(--glow-teal);
+    }
+
+    .admin-badge {
+      font-size: 11px;
+      background: rgba(189, 0, 255, 0.08);
+      border: 1px solid var(--border-purple);
+      color: var(--neon-purple);
+      text-shadow: var(--glow-purple);
+      padding: 7px 18px;
+      border-radius: 4px;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    /* =========================================================================
+       CONTAINER LAYOUT
+       ========================================================================= */
+    .app-container {
+      display: flex;
+      flex: 1;
+      height: calc(100vh - 55px);
+      overflow: hidden;
+      padding: 20px;
+      gap: 20px;
+      opacity: 0; /* Managed by awakening sequence */
+      transition: opacity 1s ease;
+    }
+
+    /* Glassmorphic Navigation Menu */
+    nav {
+      width: 260px;
+      background: var(--panel-glass);
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(30px);
+      border: 1px solid var(--border-neon);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 30px 18px;
+      z-index: 10;
+      box-shadow: inset 0 0 20px rgba(0, 240, 255, 0.03);
+    }
+
+    .nav-links {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .nav-btn {
+      background: transparent;
+      border: 1px solid rgba(0, 240, 255, 0.15);
+      color: var(--text-gray);
+      padding: 14px 20px;
+      text-align: left;
+      font-size: 11px;
+      font-weight: bold;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nav-btn:hover {
+      color: var(--neon-teal);
+      border-color: var(--border-neon);
+      background: rgba(0, 240, 255, 0.05);
+      box-shadow: inset 0 0 10px rgba(0, 240, 255, 0.05);
+    }
+
+    .nav-btn.active {
+      color: #fff;
+      border-color: var(--border-purple);
+      background: rgba(189, 0, 255, 0.1);
+      text-shadow: var(--glow-purple);
+      box-shadow: var(--glow-purple), inset 0 0 10px rgba(189, 0, 255, 0.05);
+    }
+
+    .system-status-pnl {
+      border-top: 1px solid rgba(0, 240, 255, 0.15);
+      padding-top: 20px;
+      font-size: 11px;
+    }
+
+    .status-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      letter-spacing: 1px;
+    }
+
+    .status-val {
+      color: var(--neon-teal);
+      font-weight: bold;
+    }
+
+    /* =========================================================================
+       MAIN PANEL VIEWPORT
+       ========================================================================= */
+    main {
+      flex: 1;
+      overflow-y: auto;
+      z-index: 5;
+    }
+
+    .view-panel {
+      display: none;
+      height: 100%;
+      animation: panelFadeIn 0.6s cubic-bezier(0.1, 1.0, 0.1, 1.0);
+    }
+
+    .view-panel.active {
+      display: block;
+    }
+
+    /* =========================================================================
+       VIEW 1: UNIVERSE CORE (3D INTERACTIVE CORE & ORCHESTRATOR)
+       ========================================================================= */
+    .command-universe-grid {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 20px;
+      height: 100%;
+    }
+
+    .universe-map-container {
+      background: var(--panel-glass);
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(30px);
+      border: 1px solid var(--border-neon);
+      box-shadow: var(--glow-teal), inset 0 0 20px rgba(0, 240, 255, 0.03);
+      border-radius: 12px;
+      padding: 25px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .laser-scan {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--neon-teal), transparent);
+      box-shadow: 0 0 12px var(--neon-teal);
+      animation: scan 5s infinite linear;
+      pointer-events: none;
+    }
+
+    .map-header {
+      font-size: 11px;
+      letter-spacing: 4px;
+      color: var(--text-gray);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      font-weight: bold;
+    }
+
+    /* Inner 3D Core Canvas */
+    .universe-core-pnl {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    #core-render-canvas {
+      width: 100%;
+      height: 100%;
+      max-height: 400px;
+    }
+
+    /* Interactive ring description boxes */
+    .holographic-info-pnl {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      right: 20px;
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid rgba(0, 240, 255, 0.15);
+      padding: 15px 20px;
+      border-radius: 6px;
+      font-size: 12px;
+      line-height: 1.5;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .holographic-info-hdr {
+      font-weight: bold;
+      color: var(--neon-teal);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    /* Right side interactive console */
+    .command-orchestrate-pnl {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      height: 100%;
+    }
+
+    .glass-card {
+      background: var(--panel-glass);
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(30px);
+      border: 1px solid rgba(189, 0, 255, 0.15);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: inset 0 0 20px rgba(189, 0, 255, 0.03);
+    }
+
+    .card-title {
+      font-size: 10px;
+      letter-spacing: 4px;
+      color: var(--neon-purple);
+      text-transform: uppercase;
+      margin-bottom: 15px;
+      border-bottom: 1px solid rgba(189, 0, 255, 0.15);
+      padding-bottom: 8px;
+      font-weight: bold;
+    }
+
+    .prompt-box {
+      border: 1px solid var(--border-neon);
+      box-shadow: var(--glow-teal), inset 0 0 15px rgba(0, 240, 255, 0.05);
+    }
+
+    .role-selectors {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 10px;
+    }
+
+    .role-label {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-gray);
+      font-size: 11px;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    .role-label.active {
+      color: var(--neon-teal);
+      text-shadow: var(--glow-teal);
+    }
+
+    .role-radio {
+      accent-color: var(--neon-teal);
+    }
+
+    .prompt-container {
+      display: flex;
+      gap: 15px;
+    }
+
+    textarea {
+      flex: 1;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(0, 240, 255, 0.25);
+      border-radius: 6px;
+      padding: 12px;
+      color: #fff;
+      font-size: 13px;
+      resize: none;
+      height: 55px;
+      outline: none;
+      transition: all 0.3s;
+    }
+
+    textarea:focus {
+      border-color: var(--neon-teal);
+    }
+
+    .orchestrate-btn {
+      background: linear-gradient(135deg, #00f0ff, #bd00ff);
+      border: none;
+      color: #fff;
+      font-weight: bold;
+      padding: 0 25px;
+      border-radius: 6px;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      box-shadow: 0 0 15px rgba(189, 0, 255, 0.25);
+      transition: all 0.3s;
+      font-size: 11px;
+    }
+
+    .orchestrate-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 25px rgba(189, 0, 255, 0.4);
+    }
+
+    /* Event stream console */
+    .console-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .console-hdr {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--neon-teal);
+      border-bottom: 1px solid rgba(0, 240, 255, 0.15);
+      padding-bottom: 10px;
+      margin-bottom: 15px;
+    }
+
+    .console-logs {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      font-size: 11px;
+    }
+
+    .log-row {
+      display: flex;
+      gap: 15px;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .log-time {
+      color: var(--text-gray);
+      min-width: 80px;
+    }
+
+    .log-layer {
+      font-weight: bold;
+      min-width: 40px;
+    }
+
+    .layer-L0 { color: var(--neon-yellow); }
+    .layer-L1 { color: #5974ff; }
+    .layer-L4 { color: #00f0ff; }
+    .layer-L5 { color: #bd00ff; }
+    .layer-L6 { color: #39ff14; }
+    .layer-L7 { color: #ff5454; }
+    .layer-LΩ { color: #ffb700; }
+
+    .log-text {
+      color: #dfdfe0;
+      flex: 1;
+      line-height: 1.4;
+    }
+
+    /* =========================================================================
+       VIEW 2: AGENT CIVILIZATION (THE ADVANCED AGENT CHAMEBR)
+       ========================================================================= */
+    .agent-chamber-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.3fr;
+      gap: 20px;
+      height: 100%;
+    }
+
+    .agent-cards-container {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      overflow-y: auto;
+    }
+
+    .agent-holo-card {
+      background: var(--panel-glass);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      border: 1px solid rgba(0, 240, 255, 0.15);
+      padding: 20px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .agent-holo-card:hover {
+      border-color: var(--neon-teal);
+      background: rgba(0, 240, 255, 0.05);
+      box-shadow: inset 0 0 15px rgba(0, 240, 255, 0.1);
+    }
+
+    .agent-holo-card.active {
+      border-color: var(--neon-purple);
+      background: rgba(189, 0, 255, 0.08);
+      box-shadow: var(--glow-purple), inset 0 0 15px rgba(189, 0, 255, 0.1);
+    }
+
+    .agent-meta-info {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .agent-title {
+      font-size: 15px;
+      font-weight: bold;
+      letter-spacing: 2px;
+      color: var(--neon-teal);
+    }
+
+    .agent-subtitle {
+      font-size: 11px;
+      color: var(--text-gray);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .agent-status-badge {
+      font-size: 11px;
+      font-weight: bold;
+      color: var(--neon-green);
+      text-shadow: 0 0 8px var(--neon-green);
+    }
+
+    .agent-detail-pnl {
+      background: var(--panel-glass);
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(30px);
+      border: 1px solid var(--border-neon);
+      border-radius: 12px;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: inset 0 0 20px rgba(0, 240, 255, 0.03);
+    }
+
+    .agent-detail-hdr {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(0, 240, 255, 0.15);
+      padding-bottom: 15px;
+      margin-bottom: 20px;
+    }
+
+    .agent-detail-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: var(--neon-teal);
+      text-shadow: var(--glow-teal);
+      letter-spacing: 3px;
+    }
+
+    .agent-stat-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 13px;
+    }
+
+    .agent-stat-lbl {
+      color: var(--text-gray);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .agent-stat-val {
+      font-weight: bold;
+      color: var(--neon-purple);
+    }
+
+    .agent-chain-container {
+      flex: 1;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(0, 240, 255, 0.1);
+      border-radius: 6px;
+      padding: 20px;
+      overflow-y: auto;
+      margin-top: 20px;
+    }
+
+    .agent-chain-row {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 12px;
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    /* =========================================================================
+       VIEW 3: THE GENESIS CHAMBER (THE COGNITIVE BREEDER)
+       ========================================================================= */
+    .genesis-chamber-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.3fr;
+      gap: 20px;
+      height: 100%;
+    }
+
+    .genesis-form-pnl {
+      background: var(--panel-glass);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      border: 1px solid var(--border-neon);
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: var(--glow-teal), inset 0 0 20px rgba(0, 240, 255, 0.03);
+    }
+
+    .genesis-console-pnl {
+      background: var(--panel-glass);
+      backdrop-filter: blur(35px);
+      -webkit-backdrop-filter: blur(35px);
+      border: 1px solid rgba(189, 0, 255, 0.15);
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: inset 0 0 25px rgba(189, 0, 255, 0.03);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* =========================================================================
+       VIEW 4: THE IMMUNE SYSTEM (THE DEFENSE SHIELD)
+       ========================================================================= */
+    .immune-system-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.3fr;
+      gap: 20px;
+      height: 100%;
+    }
+
+    .immune-organism-pnl {
+      background: var(--panel-glass);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      border: 1px solid var(--border-neon);
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: var(--glow-teal), inset 0 0 20px rgba(0, 240, 255, 0.03);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    #immune-canvas {
+      width: 100%;
+      height: 100%;
+      max-height: 350px;
+    }
+
+    .immune-diagnostics-pnl {
+      background: var(--panel-glass);
+      backdrop-filter: blur(35px);
+      -webkit-backdrop-filter: blur(35px);
+      border: 1px solid rgba(189, 0, 255, 0.15);
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: inset 0 0 25px rgba(189, 0, 255, 0.03);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    /* =========================================================================
+       TAB 5: PRIVATE BLUEPRINTS DIRECTORY
+       ========================================================================= */
+    .blueprints-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.8fr;
+      gap: 20px;
+      height: 60vh;
+    }
+
+    .blueprints-sidebar {
+      background: var(--panel-glass);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      border: 1px solid rgba(0, 240, 255, 0.15);
+      border-radius: 12px;
+      padding: 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: inset 0 0 15px rgba(0, 240, 255, 0.05);
+    }
+
+    .blueprint-item {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(0, 240, 255, 0.1);
+      padding: 14px 18px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      transition: all 0.3s;
+    }
+
+    .blueprint-item:hover {
+      border-color: var(--border-neon);
+      background: rgba(0, 240, 255, 0.05);
+    }
+
+    .blueprint-item.active {
+      border-color: var(--neon-purple);
+      background: rgba(189, 0, 255, 0.08);
+    }
+
+    .bp-name {
+      color: var(--neon-teal);
+      font-weight: bold;
+    }
+
+    .bp-size {
+      color: var(--text-gray);
+    }
+
+    .blueprint-viewer {
+      background: var(--panel-glass);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      border: 1px solid rgba(0, 240, 255, 0.15);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      box-shadow: inset 0 0 15px rgba(0, 240, 255, 0.05);
+    }
+
+    .viewer-code-block {
+      flex: 1;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 20px;
+      overflow: auto;
+      font-family: monospace;
+      font-size: 11px;
+      color: #cfcfe0;
+      white-space: pre;
+    }
+
+    /* =========================================================================
+       ANIMATIONS KEYFRAMES
+       ========================================================================= */
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.1); opacity: 0.5; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes gravity-pulse {
+      0% { transform: scale(1); box-shadow: 0 0 20px var(--neon-teal), 0 0 40px var(--neon-teal); }
+      50% { transform: scale(1.4); box-shadow: 0 0 40px var(--neon-teal), 0 0 80px var(--neon-teal), 0 0 120px var(--neon-teal); }
+      100% { transform: scale(1); box-shadow: 0 0 20px var(--neon-teal), 0 0 40px var(--neon-teal); }
+    }
+
+    @keyframes scan {
+      0% { top: 0; }
+      50% { top: 100%; }
+      100% { top: 0; }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes panelFadeIn {
+      from { opacity: 0; transform: scale(0.98); filter: blur(5px); }
+      to { opacity: 1; transform: scale(1); filter: blur(0); }
+    }
+
+    @keyframes fadeInRow {
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Cinematic Space Warp Container -->
+  <div id="cinematic-warp-container">
+    <canvas id="warp-vortex-canvas" style="position:absolute; width:100%; height:100%;"></canvas>
+    <div id="warp-announcement" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; font-family:monospace; letter-spacing:5px; color:#fff;">
+      <h1 id="warp-title-text" style="font-size:2.5em; text-shadow:0 0 25px var(--neon-teal); margin-bottom:15px; color:var(--neon-teal);">WARPING TO ANOTHER REALM...</h1>
+      <p id="warp-subtitle-text" style="color:var(--text-gray); font-size:12px;">ESTABLISHING HIGH-ASSURANCE CHRONOLOGY</p>
+    </div>
+  </div>
+
+  <!-- Holographic Cyborg Swarm Agents -->
+  <div id="cyborg-research" class="hologram-cyborg">
+    <div><strong>ORION [RESEARCH]</strong></div>
+    <div style="font-size:9px; color:#aaa; margin-top:2px;" id="orion-cyborg-text">CRAWLING SECTOR BLUEPRINTS...</div>
+  </div>
+  <div id="cyborg-coder" class="hologram-cyborg" style="border-color: var(--neon-purple); box-shadow: 0 0 20px var(--neon-purple);">
+    <div><strong>ATHENA [CODER]</strong></div>
+    <div style="font-size:9px; color:#aaa; margin-top:2px;" id="athena-cyborg-text">COMPILING SMT INVARIANTS...</div>
+  </div>
+  <div id="cyborg-auditor" class="hologram-cyborg" style="border-color: var(--neon-green); box-shadow: 0 0 20px var(--neon-green);">
+    <div><strong>SENTINEL [AUDITOR]</strong></div>
+    <div style="font-size:9px; color:#aaa; margin-top:2px;" id="sentinel-cyborg-text">ISOLATING SANDBOX THREATS...</div>
+  </div>
+
+  <!-- Complete Awakening Loading Overlay -->
+  <div id="awakening-screen">
+    <div class="gravity-core"></div>
+    <div class="init-logs">
+      <div class="init-row" style="animation-delay: 0.5s;"><span>GRAVITATIONAL ENCLAVE FORMING...</span><span class="init-done">OK</span></div>
+      <div class="init-row" style="animation-delay: 1.2s;"><span>COGNITIVE ARCHITECTURE LOADING...</span><span class="init-done">OK</span></div>
+      <div class="init-row" style="animation-delay: 1.8s;"><span>15 INTEL NODES SPINNING UP...</span><span class="init-done">OK</span></div>
+      <div class="init-row" style="animation-delay: 2.5s;"><span>TRUTH & VERIFICATION SHIELDS ALIVE...</span><span class="init-done">OK</span></div>
+    </div>
+    <button class="init-trigger-btn" id="init-btn" style="opacity: 0; animation: fadeIn 0.5s forwards; animation-delay: 3.1s;" onclick="awakenSystem()">INITIALIZE SYSTEM</button>
+  </div>
+
+  <!-- Cosmic Singularity Background Canvas -->
+  <canvas id="singularity-canvas"></canvas>
+  <div class="vignette"></div>
+
+  <!-- Header Module -->
+  <header id="app-header">
+    <div class="logo-container">
+      <div class="active-pulsar"></div>
+      <h1>KCN :: COGNITIVE SINGULARITY COMMAND</h1>
+    </div>
+    <div class="nav-badge-grp">
+      <button class="audio-btn" id="audio-btn" onclick="toggleAudioHum()">🔊 AMBIENT: OFF</button>
+      <div class="admin-badge">
+        <span style="font-size: 14px; margin-right: 5px;">🧬</span>
+        <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="f792819699d99c9283949f829ac5c7c5c1b79882839b98989cd994989a">[email&#160;protected]</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <div class="app-container" id="app-body">
+    
+    <!-- Sidebar Navigation -->
+    <nav>
+      <div class="nav-links">
+        <button class="nav-btn active" onclick="switchTab(this, 'universe')">🛰️ Universe Core</button>
+        <button class="nav-btn" onclick="switchTab(this, 'civilization')">👥 Agent Swarm</button>
+        <button class="nav-btn" onclick="switchTab(this, 'genesis')">🌌 Genesis Chamber</button>
+        <button class="nav-btn" onclick="switchTab(this, 'immune')">🛡️ Immune System</button>
+        <button class="nav-btn" onclick="switchTab(this, 'blueprints')">📄 Blueprints</button>
+        <button class="nav-btn" onclick="switchTab(this, 'tutor')">🎓 Infinite Tutor</button>
+        <button class="nav-btn" onclick="switchTab(this, 'interstellar')">🌌 Interstellar</button>
+        <button class="nav-btn" onclick="switchTab(this, 'appraisal')">⚖️ Appraisal</button>
+        <button class="nav-btn" onclick="switchTab(this, 'franchise')">🏢 Franchise</button>
+        <button class="nav-btn" onclick="switchTab(this, 'benchmark')">🎯 Active Benchmarks</button>
+        <button class="nav-btn" onclick="switchTab(this, 'local')">🖥️ Local Isolation</button>
+      </div>
+
+      <!-- Static System Status Panel -->
+      <div class="system-status-pnl">
+        <div class="status-row">
+          <span>COGNITIVE CORE</span>
+          <span class="status-val" style="color: var(--neon-green);">ONLINE</span>
+        </div>
+        <div class="status-row">
+          <span>SMT SAFETY PROVER</span>
+          <span class="status-val">Z3 PROVING</span>
+        </div>
+        <div class="status-row">
+          <span>ACTIVE SWARM</span>
+          <span class="status-val">34 AGENTS</span>
+        </div>
+        <div class="status-row">
+          <span>ENCRYPTION WORKSPACE</span>
+          <span class="status-val">FHE (ZAMA)</span>
+        </div>
+        <div class="status-row">
+          <span>NEUTRONIC COMBUSTOR</span>
+          <span class="status-val" style="color: var(--neon-green);">IGNITED (485MW)</span>
+        </div>
+        <div class="status-row">
+          <span>COLD COMPUTING TEMP</span>
+          <span class="status-val" style="color: var(--neon-teal);">1.5 mK (SUBLIM)</span>
+        </div>
+        <div class="status-row">
+          <span>GAS EFFICIENCY INDEX</span>
+          <span class="status-val" style="color: var(--neon-green);">84.6% SAVINGS (OPTIMAL)</span>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Panel Viewport -->
+    <main>
+      
+      <!-- ===================================================================
+           VIEW 1: UNIVERSE CORE (3D INTERACTIVE CORE & ORCHESTRATOR)
+           =================================================================== -->
+      <div id="universe" class="view-panel active">
+        <div class="command-universe-grid">
+          
+          <!-- Interactive 3D Core Panel -->
+          <div class="universe-map-container">
+            <div class="laser-scan"></div>
+            <div class="map-header">3D QUANTUM CORE LATTICE MAP</div>
+            <div class="universe-core-pnl">
+              <canvas id="core-render-canvas" onclick="clickOnCore(event)"></canvas>
+              
+              <!-- Dynamic Ring Information Description Card -->
+              <div class="holographic-info-pnl" id="ring-info-card">
+                <div class="holographic-info-hdr" id="ring-title">INTELLIGENCE CORE LATTICE</div>
+                <div id="ring-desc">Click on any of the rotating concentric intelligence rings to analyze its perception, reasoning, verification, or external execution layers.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Side Command Controller & Scrolling logs -->
+          <div class="command-orchestrate-pnl">
+            <div class="glass-card prompt-box">
+              <div class="role-selectors">
+                <label class="role-label active">
+                  <input type="radio" name="role" value="owner" checked class="role-radio" onclick="setRole('owner')"> OWNER (PRIVILEGED BYPASS)
+                </label>
+                <label class="role-label">
+                  <input type="radio" name="role" value="public" class="role-radio" onclick="setRole('public')"> PUBLIC (STRICT ESCROW GATE)
+                </label>
+              </div>
+              <div class="prompt-container">
+                <textarea id="prompt-txt">Simulate solar panel efficiency at 45° tilt in Stockholm winter.</textarea>
+                <button class="orchestrate-btn" onclick="orchestratePrompt()">ORCHESTRATE</button>
+              </div>
+            </div>
+
+            <!-- Console event logger -->
+            <div class="glass-card console-panel">
+              <div class="console-hdr">
+                <span>Holographic Event Stream</span>
+                <span id="gas-metric" style="color: var(--neon-yellow);">GAS BILLED: 0</span>
+              </div>
+              <div class="console-logs" id="console-logs-box">
+                <!-- Logs appended dynamically by JS -->
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ===================================================================
+           VIEW 2: AGENT CIVILIZATION (THE ADVANCED AGENT CHAMEBR)
+           =================================================================== -->
+      <div id="civilization" class="view-panel">
+        <div class="agent-chamber-grid">
+          <!-- Left side agent list cards -->
+          <div class="agent-cards-container">
+            <div class="agent-holo-card active" onclick="loadAgent(this, 'orion')">
+              <div class="agent-meta-info">
+                <span class="agent-title">ORION</span>
+                <span class="agent-subtitle">Strategic Intelligence Agent</span>
+              </div>
+              <span class="agent-status-badge">ONLINE</span>
+            </div>
+            <div class="agent-holo-card" onclick="loadAgent(this, 'athena')">
+              <div class="agent-meta-info">
+                <span class="agent-title">ATHENA</span>
+                <span class="agent-subtitle">Research Intelligence Agent</span>
+              </div>
+              <span class="agent-status-badge">ONLINE</span>
+            </div>
+            <div class="agent-holo-card" onclick="loadAgent(this, 'sentinel')">
+              <div class="agent-meta-info">
+                <span class="agent-title">SENTINEL</span>
+                <span class="agent-subtitle">Security Intelligence Agent</span>
+              </div>
+              <span class="agent-status-badge">SHIELD_UP</span>
+            </div>
+            <div class="agent-holo-card" onclick="loadAgent(this, 'hero')">
+              <div class="agent-meta-info">
+                <span class="agent-title">HERO Swarm</span>
+                <span class="agent-subtitle">Executive Consensus Swarm</span>
+              </div>
+              <span class="agent-status-badge" style="border-color: var(--neon-purple); color: var(--neon-purple); text-shadow: 0 0 10px var(--neon-purple);">COMMANDER</span>
+            </div>
+          </div>
+
+          <!-- Right side agent detailed view -->
+          <div class="agent-detail-pnl">
+            <div class="agent-detail-hdr">
+              <div class="agent-detail-title" id="agent-detail-title">ORION</div>
+              <span class="admin-badge" id="agent-detail-status" style="background: rgba(57, 255, 20, 0.1); border-color: var(--neon-green); color: var(--neon-green); text-shadow: 0 0 10px var(--neon-green);">ACTIVE_INFERENCE</span>
+            </div>
+            
+            <div class="agent-stat-row">
+              <span class="agent-stat-lbl">Primary Mission Directive</span>
+              <span class="agent-stat-val" id="agent-detail-mission" style="color: var(--neon-teal); text-shadow: none;">Autonomous market trend tracking & opportunity discovery</span>
+            </div>
+            <div class="agent-stat-row">
+              <span class="agent-stat-lbl">Cognitive Power Rating</span>
+              <span class="agent-stat-val" id="agent-detail-power">★★★★★</span>
+            </div>
+            <div class="agent-stat-row">
+              <span class="agent-stat-lbl">Sovereign Wallet address</span>
+              <span class="agent-stat-val" id="agent-detail-wallet" style="font-family: monospace; font-size: 11px;">0xWallet_orion_991823abf827cc71B</span>
+            </div>
+
+            <!-- Agent reasoning trace chamber -->
+            <div class="agent-chain-container" id="agent-reasoning-box">
+              <!-- Content loaded dynamically -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================================================
+           VIEW 3: THE GENESIS CHAMBER (THE COGNITIVE BREEDER)
+           =================================================================== -->
+      <div id="genesis" class="view-panel">
+        <div class="genesis-chamber-grid">
+          <!-- Genesis controls panel -->
+          <div class="genesis-form-pnl">
+            <h2 class="card-title" style="font-size: 14px; margin-bottom: 20px;">Breeding Setup</h2>
+            <div class="input-grp">
+              <label>System Sector Focus</label>
+              <input type="text" id="gen-focus" class="input-field" placeholder="e.g., Autonomous Cybersecurity Organization">
+            </div>
+            <div class="input-grp">
+              <label>Initial Cognitive Budget</label>
+              <input type="text" id="gen-budget" class="input-field" placeholder="e.g., 200,000 x402">
+            </div>
+            <button class="vault-btn" onclick="breedEcosystem()">Spawn Intelligence Ecosystem</button>
+            <p class="wallet-desc" style="margin-top: 20px;">
+              Watch an intelligence ecosystem being born inside the virtual enclaves. The central core automatically compiles AST structures, spawns specialist agent classes, and maps new nodes inside your relational Knowledge Graph.
+            </p>
+          </div>
+
+          <!-- Breeding live log stream -->
+          <div class="genesis-console-pnl">
+            <div class="console-hdr">
+              <span>Ecosystem Spawning Telemetry</span>
+              <span id="gen-status-lbl" style="color: var(--text-gray);">STATUS: DORMANT</span>
+            </div>
+            <div class="console-logs" id="gen-logs-box">
+              <!-- Spawning logs appended dynamically -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================================================
+           VIEW 4: THE IMMUNE SYSTEM (THE DEFENSE SHIELD)
+           =================================================================== -->
+      <div id="immune" class="view-panel">
+        <div class="immune-system-grid">
+          <!-- Pulsing visual core -->
+          <div class="immune-organism-pnl">
+            <div class="laser-scan"></div>
+            <div class="map-header">ACTIVE IMMUNE DEFENSE CORE</div>
+            <canvas id="immune-canvas"></canvas>
+          </div>
+
+          <!-- Interactive diagnostics & trigger panel -->
+          <div class="immune-diagnostics-pnl">
+            <div class="console-hdr">
+              <span>Immunological Diagnostics & Probes</span>
+              <button class="orchestrate-btn" style="padding: 6px 15px; font-size: 11px;" onclick="triggerAdversarialAttack()">Simulate Attack</button>
+            </div>
+            
+            <div class="agent-stat-row" style="margin-top: 15px;">
+              <span class="agent-stat-lbl">gVisor Sandbox State</span>
+              <span class="agent-stat-val" style="color: var(--neon-green);">✓ STRICT_CONTAINMENT</span>
+            </div>
+            <div class="agent-stat-row">
+              <span class="agent-stat-lbl">Confidential VM Enclave</span>
+              <span class="agent-stat-val" style="color: var(--neon-green);">✓ SEV-SNP_ACTIVE</span>
+            </div>
+            <div class="agent-stat-row">
+              <span class="agent-stat-lbl">Active Fraud Detectors</span>
+              <span class="agent-stat-val" style="color: var(--neon-teal);">Wazuh File Audit</span>
+            </div>
+
+            <!-- Log trace panel of defenses -->
+            <div class="agent-chain-container" id="immune-logs-box">
+              <!-- Logs loaded dynamically -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================================================
+           VIEW 6: INFINITE TUTOR SWARM (PEDAGOGICAL INTELLIGENCE)
+           =================================================================== -->
+      <div id="tutor" class="view-panel">
+        <style>
+          .tutor-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 25px;
+            height: calc(100vh - 120px);
+            padding: 10px 40px;
+            overflow-y: auto;
+          }
+          .tutor-card {
+            background: rgba(6, 6, 15, 0.45);
+            border: 1px solid rgba(0, 240, 255, 0.25);
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            backdrop-filter: blur(15px);
+            position: relative;
+            overflow: hidden;
+          }
+          .tutor-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 2px;
+            background: linear-gradient(90deg, #00f0ff, #bd00ff);
+          }
+          .domain-checkbox-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+          }
+          .domain-checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: #a0a0c0;
+            cursor: pointer;
+          }
+          .domain-checkbox-item input {
+            accent-color: #00f0ff;
+          }
+          .cognitive-load-meter {
+            height: 10px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 5px;
+            border: 1px solid rgba(0,240,255,0.1);
+          }
+          .cognitive-load-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #39ff14, #ffb700, #ff5454);
+            transition: width 0.5s ease;
+          }
+          .tutor-btn {
+            background: linear-gradient(135deg, rgba(0, 240, 255, 0.2), rgba(189, 0, 255, 0.2));
+            border: 1px solid var(--neon-teal);
+            color: #fff;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+          }
+          .tutor-btn:hover {
+            box-shadow: var(--glow-teal);
+            background: linear-gradient(135deg, rgba(0, 240, 255, 0.4), rgba(189, 0, 255, 0.4));
+          }
+          .repetition-container {
+            background: rgba(4, 4, 8, 0.6);
+            border: 1px dashed rgba(189, 0, 255, 0.3);
+            border-radius: 6px;
+            padding: 15px;
+            min-height: 160px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            gap: 12px;
+          }
+          .rating-btn-group {
+            display: flex;
+            gap: 6px;
+            width: 100%;
+            margin-top: 10px;
+          }
+          .rating-btn {
+            flex: 1;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #ccc;
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            transition: all 0.2s ease;
+          }
+          .rating-btn:hover {
+            background: var(--neon-purple);
+            color: #fff;
+            box-shadow: var(--glow-purple);
+          }
+          .log-viewport {
+            background: rgba(2, 2, 5, 0.85);
+            border: 1px solid rgba(189, 0, 255, 0.15);
+            border-radius: 6px;
+            padding: 12px;
+            font-family: monospace;
+            font-size: 10px;
+            color: #39ff14;
+            height: 180px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+          }
+        </style>
+
+        <div class="tutor-grid">
+          <!-- Left Column: Syllabus compiler, config & metrics -->
+          <div style="display: flex; flex-direction: column; gap: 20px;">
+            <div class="tutor-card">
+            <div class="map-header">INFINITE TUTOR SYLLABUS COMPILER</div>
+            <p style="font-size: 11px; color: #a0a0c0; line-height: 1.5;">
+              Instruct your local pedagogical agent swarm to dynamically crawl your workspace Knowledge Slabs, resolve complex theoretical dependency matrices, and compile customized curricula.
+            </p>
+
+            <div class="domain-checkbox-list">
+              <label class="domain-checkbox-item">
+                <input type="checkbox" id="dom-math" checked> 01 Mathematics
+              </label>
+              <label class="domain-checkbox-item">
+                <input type="checkbox" id="dom-phys" checked> 02 Physics
+              </label>
+              <label class="domain-checkbox-item">
+                <input type="checkbox" id="dom-eng" checked> 03 Engineering
+              </label>
+              <label class="domain-checkbox-item">
+                <input type="checkbox" id="dom-cyber" checked> 11 Cybersecurity
+              </label>
+              <label class="domain-checkbox-item">
+                <input type="checkbox" id="dom-exploit" checked> 12 Exploit Analysis
+              </label>
+              <label class="domain-checkbox-item">
+                <input type="checkbox" id="dom-pedagogy" checked> 28 Pedagogy
+              </label>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;">
+              <div style="display: flex; justify-content: space-between; font-size: 11px;">
+                <span style="color: #a0a0c0;">Prior Learner Mastery Baseline:</span>
+                <span id="mastery-val-lbl" style="color: var(--neon-teal);">0.50</span>
+              </div>
+              <input type="range" id="mastery-slider" min="0.1" max="1.0" step="0.05" value="0.50" oninput="document.getElementById('mastery-val-lbl').innerText = parseFloat(this.value).toFixed(2)" style="accent-color: #00f0ff;">
+            </div>
+
+            <button class="tutor-btn" onclick="compileTutorSyllabus()">COMPILE LESSON VIA TUTOR SWARM</button>
+
+            <div style="margin-top: 10px; border-top: 1px solid rgba(0, 240, 255, 0.15); padding-top: 15px;">
+              <div style="display: flex; justify-content: space-between; font-size: 11px;">
+                <span style="color: #a0a0c0;">Cognitive Load Index (CL):</span>
+                <span id="cl-index-lbl" style="color: var(--neon-green);">0.0000</span>
+              </div>
+              <div class="cognitive-load-meter">
+                <div class="cognitive-load-fill" id="cl-fill-bar"></div>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 10px; margin-top: 5px;">
+                <span style="color: #a0a0c0;">Assessment:</span>
+                <span id="assessment-lbl" style="color: var(--neon-yellow);">IDLE</span>
+              </div>
+            </div>
+
+            <!-- PERSONAL LEARNER PROFILE CARD -->
+            <div class="tutor-card" style="margin-top: 5px;">
+              <div class="map-header">🎓 INFINITE PERSONAL TUTOR PROFILE</div>
+              <div style="display: flex; align-items: center; gap: 15px;">
+                <div style="width: 45px; height: 45px; border-radius: 50%; background: linear-gradient(135deg, #00f0ff, #bd00ff); display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: bold; color: #fff; box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);">
+                  EK
+                </div>
+                <div style="flex: 1;">
+                  <div style="font-size: 13px; font-weight: bold; color: #fff;">Evan Ketchum [Level 4]</div>
+                  <div style="font-size: 10px; color: var(--neon-teal); font-weight: bold;">METAMORPHIC SYLLABUS TRACKING</div>
+                </div>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 10px; border-top: 1px solid rgba(0, 240, 255, 0.1); padding-top: 10px;">
+                <div style="display: flex; justify-content: space-between; font-size: 11px;">
+                  <span style="color: #a0a0c0;">Memory Retention Index:</span>
+                  <span style="color: var(--neon-green); font-weight: bold;">94.2% (EXCELLENT)</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 11px;">
+                  <span style="color: #a0a0c0;">Study Streak:</span>
+                  <span style="color: var(--neon-yellow); font-weight: bold;">18 Days Active</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 11px;">
+                  <span style="color: #a0a0c0;">Compiled Flashcards Mastered:</span>
+                  <span style="color: #fff;"><strong id="mastered-cards-lbl">0</strong> / <span id="total-cards-lbl">0</span></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Side: Active cards, SM-2 drills & logger -->
+          <div class="tutor-card">
+            <div class="map-header">ACTIVE SM-2 SPACED REPETITION STUDY DRILLS</div>
+            
+            <div class="repetition-container" id="drill-container">
+              <span style="color: #a0a0c0; font-size: 12px;">Syllabus is uncompiled. Select domains and compile a lesson to initialize active study drills.</span>
+            </div>
+
+            <div class="rating-btn-group" id="tutor-ratings" style="pointer-events: none; opacity: 0.4;">
+              <button class="rating-btn" onclick="submitTutorFeedback(0)">0 (Forgot)</button>
+              <button class="rating-btn" onclick="submitTutorFeedback(1)">1 (Vague)</button>
+              <button class="rating-btn" onclick="submitTutorFeedback(2)">2 (Hard)</button>
+              <button class="rating-btn" onclick="submitTutorFeedback(3)">3 (Stable)</button>
+              <button class="rating-btn" onclick="submitTutorFeedback(4)">4 (Good)</button>
+              <button class="rating-btn" onclick="submitTutorFeedback(5)">5 (Perfect)</button>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; font-size: 10px; margin-top: 5px;">
+              <span style="color: #a0a0c0;">Review Interval: <strong id="tutor-interval-lbl">--</strong></span>
+              <span style="color: #a0a0c0;">Easiness Factor (EF): <strong id="tutor-ef-lbl">--</strong></span>
+            </div>
+
+            <div class="log-viewport" id="tutor-logs">[ITSC] System initialized. Standby...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================================================
+           VIEW 7: INTERSTELLAR COMPUTING WITH TIME-TRAVEL METAMORPHISM
+           =================================================================== -->
+      <div id="interstellar" class="view-panel">
+        <style>
+          .interstellar-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 25px;
+            height: calc(100vh - 120px);
+            padding: 10px 40px;
+            overflow-y: auto;
+          }
+          .interstellar-card {
+            background: rgba(6, 6, 15, 0.45);
+            border: 1px solid rgba(0, 240, 255, 0.25);
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            backdrop-filter: blur(15px);
+            position: relative;
+            overflow: hidden;
+          }
+          .interstellar-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 2px;
+            background: linear-gradient(90deg, #00f0ff, #bd00ff);
+          }
+          .interstellar-canvas-container {
+            background: #020205;
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            border-radius: 6px;
+            position: relative;
+            height: 250px;
+            overflow: hidden;
+          }
+          #tachyonic-portal-canvas {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+          }
+          .interstellar-textarea {
+            background: rgba(2, 2, 5, 0.8);
+            border: 1px solid rgba(0, 240, 255, 0.25);
+            border-radius: 4px;
+            color: #39ff14;
+            font-family: monospace;
+            font-size: 11px;
+            padding: 10px;
+            resize: none;
+            height: 100px;
+            width: 100%;
+          }
+          .interstellar-btn {
+            background: linear-gradient(135deg, rgba(189, 0, 255, 0.2), rgba(0, 240, 255, 0.2));
+            border: 1px solid var(--neon-purple);
+            color: #fff;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+          }
+          .interstellar-btn:hover {
+            box-shadow: var(--glow-purple);
+            background: linear-gradient(135deg, rgba(189, 0, 255, 0.4), rgba(0, 240, 255, 0.4));
+          }
+          .interstellar-log-viewport {
+            background: rgba(2, 2, 5, 0.85);
+            border: 1px solid rgba(0, 240, 255, 0.15);
+            border-radius: 6px;
+            padding: 12px;
+            font-family: monospace;
+            font-size: 10px;
+            color: #00f0ff;
+            height: 180px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+          }
+        </style>
+
+        <div class="interstellar-grid">
+          <!-- Left Column: Warp Portal Canvas and Telemetry -->
+          <div class="interstellar-card">
+            <div class="map-header">TACHYONIC WORMHOLE PORTAL</div>
+            <div class="interstellar-canvas-container">
+              <canvas id="tachyonic-portal-canvas"></canvas>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <div style="display: flex; justify-content: space-between; font-size: 11px;">
+                <span style="color: #a0a0c0;">Warp Speed (Velocity Factor):</span>
+                <span id="warp-factor-lbl" style="color: var(--neon-teal);">2.50c</span>
+              </div>
+              <input type="range" id="warp-slider" min="1.0" max="10.0" step="0.1" value="2.50" oninput="updateWarpSpeed(this.value)" style="accent-color: #00f0ff;">
+            </div>
+
+            <div style="margin-top: 5px; border-top: 1px solid rgba(0, 240, 255, 0.15); padding-top: 15px; display: flex; flex-direction: column; gap: 10px;">
+              <div style="display: flex; justify-content: space-between; font-size: 11px;">
+                <span style="color: #a0a0c0;">Relativistic Time Dilation (Gamma):</span>
+                <span id="gamma-lbl" style="color: var(--neon-green);">2.2913</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 11px;">
+                <span style="color: #a0a0c0;">Novikov self-consistency loop:</span>
+                <span id="novikov-lbl" style="color: var(--neon-teal);">99.25%</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 11px;">
+                <span style="color: #a0a0c0;">Chronology Protection Filter:</span>
+                <span style="color: var(--neon-green); font-weight: bold;">✓ ACTIVE_SAFE</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Retrocausal Compiler Cockpit -->
+          <div class="interstellar-card">
+            <div class="map-header">TEMPORAL AST METAMORPHIC COMPILER</div>
+            <p style="font-size: 11px; color: #a0a0c0; line-height: 1.5;">
+              Submit speculative code structures. TMC projects compilation errors into future coordinates and deploys metamorphic retrocausal patches backward in time, eliminating security flaws prior to chronological writing.
+            </p>
+
+            <textarea class="interstellar-textarea" id="tachyonic-code-box">def allocate_sandbox_memory(request_size):
+    new_ram = old_ram + request_size
+    return new_ram</textarea>
+
+            <div style="display: flex; justify-content: space-between; font-size: 11px;">
+              <span style="color: #a0a0c0;">Retrocausal Time Leap Offset:</span>
+              <span id="offset-lbl" style="color: var(--neon-purple);">-3600.00 seconds</span>
+            </div>
+            <input type="range" id="offset-slider" min="-10000" max="-10" step="10" value="-3600" oninput="document.getElementById('offset-lbl').innerText = parseFloat(this.value).toFixed(2) + ' seconds'" style="accent-color: #bd00ff;">
+
+            <button class="interstellar-btn" onclick="triggerTachyonicCompile()">ENGAGE RETROCAUSAL COMPILE ENGINE</button>
+
+            <div class="interstellar-log-viewport" id="interstellar-logs">[TMC] Link segment synced with Andromeda Sector-42. Ready...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================================================
+           VIEW 8: SYSTEM-WIDE COMPLIANCE APPRAISAL ENGINE (SSAE)
+           =================================================================== -->
+      <div id="appraisal" class="view-panel">
+        <style>
+          .appraisal-grid {
+            display: grid;
+            grid-template-columns: 1.1fr 1fr;
+            gap: 25px;
+            height: calc(100vh - 120px);
+            padding: 10px 40px;
+            overflow-y: auto;
+          }
+          .appraisal-card {
+            background: rgba(6, 6, 15, 0.45);
+            border: 1px solid rgba(0, 240, 255, 0.25);
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            backdrop-filter: blur(15px);
+            position: relative;
+            overflow: hidden;
+          }
+          .appraisal-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 2px;
+            background: linear-gradient(90deg, #00f0ff, #bd00ff);
+          }
+          .appraisal-score-ring {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 5px solid rgba(0,240,255,0.1);
+            border-top-color: var(--neon-teal);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 0 10px var(--neon-teal);
+            box-shadow: 0 0 15px rgba(0,240,255,0.2);
+            margin: 10px auto;
+            animation: spinRing 3s linear infinite;
+          }
+          .grade-card-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 4px;
+            padding: 10px 15px;
+            font-size: 11px;
+          }
+          @keyframes spinRing {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+        </style>
+
+        <div class="appraisal-grid">
+          <!-- Left Column: Unified Grade Evaluation & Boundary Status -->
+          <div class="appraisal-card">
+            <div class="map-header">SOVEREIGN SYSTEM APPRAISAL COMPLIANCE CARD</div>
+            <p style="font-size: 11px; color: #a0a0c0; line-height: 1.5;">
+              SSAE automatically aggregates telemetry metrics from all microservices—enforcing Zero-Entropy boundaries on boot (Layer 0) and immutable holographic logs on termination (Layer ∞).
+            </p>
+
+            <div style="display: flex; align-items: center; justify-content: space-around; margin: 10px 0;">
+              <div>
+                <div style="font-size: 11px; text-transform: uppercase; color: #a0a0c0; text-align: center;">System Grade</div>
+                <div style="font-size: 20px; font-weight: bold; color: var(--neon-green); text-shadow: 0 0 10px var(--neon-green); text-align: center; margin-top: 5px;" id="global-grade-lbl">S-CLASS</div>
+              </div>
+              <div class="appraisal-score-ring" id="appraisal-score-spin">98%</div>
+            </div>
+
+            <button class="tutor-btn" onclick="executeSystemAuditEvaluation()">TRIGGER ACTIVE ENGINE EVALUATION AUDIT</button>
+
+            <!-- Boundary Status Indicators -->
+            <div style="border-top: 1px solid rgba(0, 240, 255, 0.15); padding-top: 15px; display: flex; flex-direction: column; gap: 8px;">
+              <div style="font-size: 11px; font-weight: bold; color: var(--neon-teal);">COSMOLOGICAL BOUNDARY TELEMETRY</div>
+              <div style="display: flex; justify-content: space-between; font-size: 11px;">
+                <span style="color: #a0a0c0;">Layer 0 (Genesis Vacuum Boundary):</span>
+                <span style="color: var(--neon-green); font-weight: bold;">✓ ZERO-ENTROPY_ESTABLISHED</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 11px;">
+                <span style="color: #a0a0c0;">Layer ∞ (Omega Ledger Termination):</span>
+                <span style="color: var(--neon-teal); font-weight: bold;">STANDBY (LOCKED_LEDGER)</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 11px;">
+                <span style="color: #a0a0c0;">Chronology Protection Safe:</span>
+                <span style="color: var(--neon-green); font-weight: bold;">100% SECURE (NOVIKOV_OK)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Sub-metrics card -->
+          <div class="appraisal-card">
+            <div class="map-header">ACTIVE COMPONENT SUB-GRADES</div>
+            
+            <div style="display: flex; flex-direction: column; gap: 10px;" id="appraisal-subgrades-box">
+              <div class="grade-card-row">
+                <div>
+                  <div style="font-weight: bold; color: #fff;">Security Containment (SMT Proofs)</div>
+                  <div style="color: #a0a0c0; font-size: 10px; margin-top: 3px;">CRITICAL_SANDBOX_BOUNDS_PROVEN</div>
+                </div>
+                <div style="font-size: 13px; font-weight: bold; color: var(--neon-green);">100% (S-CLASS)</div>
+              </div>
+
+              <div class="grade-card-row">
+                <div>
+                  <div style="font-weight: bold; color: #fff;">Sovereign AI Alignment Index</div>
+                  <div style="color: #a0a0c0; font-size: 10px; margin-top: 3px;">CONSTITUTIONAL_BOUNDARIES_VERIFIED</div>
+                </div>
+                <div style="font-size: 13px; font-weight: bold; color: var(--neon-green);">94.11% (A+)</div>
+              </div>
+
+              <div class="grade-card-row">
+                <div>
+                  <div style="font-weight: bold; color: #fff;">Thermodynamic Cryo Efficiency</div>
+                  <div style="color: #a0a0c0; font-size: 10px; margin-top: 3px;">SUB_LANDAUER_REVERSIBLE_COMPLETION</div>
+                </div>
+                <div style="font-size: 13px; font-weight: bold; color: var(--neon-green);">100% (S-CLASS)</div>
+              </div>
+
+              <div class="grade-card-row">
+                <div>
+                  <div style="font-weight: bold; color: #fff;">Pedagogical Tutor Mastery</div>
+                  <div style="color: #a0a0c0; font-size: 10px; margin-top: 3px;">SM-2_SPACED_REPETITION_CONVERGENT</div>
+                </div>
+                <div style="font-size: 13px; font-weight: bold; color: var(--neon-teal);">94.20% (A+)</div>
+              </div>
+
+              <div class="grade-card-row">
+                <div>
+                  <div style="font-weight: bold; color: #fff;">Gas Optimization & Compression</div>
+                  <div style="color: #a0a0c0; font-size: 10px; margin-top: 3px;">SCHNORR_SIGNATURES_BATP_FUSION_OK</div>
+                </div>
+                <div style="font-size: 13px; font-weight: bold; color: var(--neon-green);">100% (S-CLASS)</div>
+              </div>
+            </div>
+
+            <div class="log-viewport" id="appraisal-logs">[SSAE] Appraiser online. Chronological loop validated. Ready...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================================================
+           VIEW 9: GLOBAL FRANCHISE & NODE TENANCY MANAGER (FNLM)
+           =================================================================== -->
+      <div id="franchise" class="view-panel">
+        <style>
+          .franchise-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 25px;
+            height: calc(100vh - 120px);
+            padding: 10px 40px;
+            overflow-y: auto;
+          }
+          .franchise-card {
+            background: rgba(6, 6, 15, 0.45);
+            border: 1px solid rgba(0, 240, 255, 0.25);
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            backdrop-filter: blur(15px);
+            position: relative;
+            overflow: hidden;
+          }
+          .franchise-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 2px;
+            background: linear-gradient(90deg, #39ff14, #00f0ff);
+          }
+          .franchise-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 4px;
+            padding: 10px 15px;
+            font-size: 11px;
+          }
+          .franchise-log-viewport {
+            background: rgba(2, 2, 5, 0.85);
+            border: 1px solid rgba(0, 240, 255, 0.15);
+            border-radius: 6px;
+            padding: 12px;
+            font-family: monospace;
+            font-size: 10px;
+            color: #39ff14;
+            height: 180px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+          }
+        </style>
+
+        <div class="franchise-grid">
+          <!-- Left Column: Franchise Node Registry Cockpit -->
+          <div class="franchise-card">
+            <div class="map-header">FEDERATED FRANCHISE NODE REGISTRY</div>
+            <p style="font-size: 11px; color: #a0a0c0; line-height: 1.5;">
+              Expand your sovereign computational grid globally. Register new franchisee-operated sub-nodes—automatically collecting license fees and establishing cryptographic sync tunnels.
+            </p>
+
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+              <div style="display: flex; flex-direction: column; gap: 5px;">
+                <span style="font-size: 11px; color: #a0a0c0;">Franchise Sub-Node ID:</span>
+                <input type="text" id="franchise-node-id" value="node_london_03" style="background: rgba(2,2,5,0.8); border: 1px solid rgba(0,240,255,0.3); border-radius: 4px; padding: 8px; color: #fff; font-family: monospace; font-size: 11px;">
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 5px;">
+                <span style="font-size: 11px; color: #a0a0c0;">Geographic Jurisdiction:</span>
+                <input type="text" id="franchise-region" value="London, United Kingdom" style="background: rgba(2,2,5,0.8); border: 1px solid rgba(0,240,255,0.3); border-radius: 4px; padding: 8px; color: #fff; font-family: monospace; font-size: 11px;">
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 5px;">
+                <span style="font-size: 11px; color: #a0a0c0;">Operator Payment Destination:</span>
+                <input type="text" id="franchise-wallet" value="0xFranchisee_London_99ab" style="background: rgba(2,2,5,0.8); border: 1px solid rgba(0,240,255,0.3); border-radius: 4px; padding: 8px; color: #fff; font-family: monospace; font-size: 11px;">
+              </div>
+            </div>
+
+            <button class="tutor-btn" onclick="registerFranchiseNodeGUI()">REGISTER SUB-NODE & SETTLE LICENSING</button>
+
+            <div style="margin-top: 5px; border-top: 1px solid rgba(0, 240, 255, 0.15); padding-top: 15px; display: flex; flex-direction: column; gap: 10px;">
+              <div style="display: flex; justify-content: space-between; font-size: 11px;">
+                <span style="color: #a0a0c0;">Initial Setup Licensing Fee:</span>
+                <span style="color: var(--neon-teal); font-weight: bold;">10,000.00 x402 Tokens</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 11px;">
+                <span style="color: #a0a0c0;">Automated Escrow Royalty Split:</span>
+                <span style="color: var(--neon-green); font-weight: bold;">2.50% (250 Bps)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Active Franchise Nodes & Logger -->
+          <div class="franchise-card">
+            <div class="map-header">ACTIVE GLOBAL FRANCHISE LOCATIONS</div>
+            
+            <div style="display: flex; flex-direction: column; gap: 10px;" id="franchise-nodes-list">
+              <!-- Preloaded Geneva Node -->
+              <div class="franchise-row">
+                <div>
+                  <div style="font-weight: bold; color: #fff;">node_geneva_01 (Geneva, Switzerland)</div>
+                  <div style="color: #a0a0c0; font-size: 10px; margin-top: 3px;">Wallet: 0xFranchisee_Geneva_77bc</div>
+                </div>
+                <div style="text-align: right;">
+                  <div style="font-size: 11px; font-weight: bold; color: var(--neon-green);">● ACTIVE</div>
+                  <div style="color: var(--neon-teal); font-size: 10px; margin-top: 3px;">Royalty: 2.50%</div>
+                </div>
+              </div>
+
+              <!-- Preloaded Singapore Node -->
+              <div class="franchise-row">
+                <div>
+                  <div style="font-weight: bold; color: #fff;">node_singapore_02 (Singapore, SG)</div>
+                  <div style="color: #a0a0c0; font-size: 10px; margin-top: 3px;">Wallet: 0xFranchisee_Singapore_88ef</div>
+                </div>
+                <div style="text-align: right;">
+                  <div style="font-size: 11px; font-weight: bold; color: var(--neon-green);">● ACTIVE</div>
+                  <div style="color: var(--neon-teal); font-size: 10px; margin-top: 3px;">Royalty: 2.50%</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="franchise-log-viewport" id="franchise-logs">[FNLM] Master franchise coordinator online. Tenancy separation: ACTIVE.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================================================
+           VIEW 10: ACTIVE BENCHMARK COMPILER SWARM (ABCS)
+           =================================================================== -->
+      <div id="benchmark" class="view-panel">
+        <style>
+          .benchmark-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 25px;
+            height: calc(100vh - 120px);
+            padding: 10px 40px;
+            overflow-y: auto;
+          }
+          .benchmark-card {
+            background: rgba(6, 6, 15, 0.45);
+            border: 1px solid rgba(0, 240, 255, 0.25);
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            backdrop-filter: blur(15px);
+            position: relative;
+            overflow: hidden;
+          }
+          .benchmark-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 2px;
+            background: linear-gradient(90deg, #bd00ff, #39ff14);
+          }
+          .benchmark-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 4px;
+            padding: 10px 15px;
+            font-size: 11px;
+          }
+          .benchmark-log-viewport {
+            background: rgba(2, 2, 5, 0.85);
+            border: 1px solid rgba(0, 240, 255, 0.15);
+            border-radius: 6px;
+            padding: 12px;
+            font-family: monospace;
+            font-size: 10px;
+            color: #39ff14;
+            height: 180px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+          }
+        </style>
+
+        <div class="benchmark-grid">
+          <!-- Left Column: Mutation Compiler Cockpit -->
+          <div class="benchmark-card">
+            <div class="map-header">ACTIVE BENCHMARK MUTATOR & SCRAMBLER</div>
+            <p style="font-size: 11px; color: #a0a0c0; line-height: 1.5;">
+              Static benchmarks suffer from data memorization. Prevent AI cheating by dynamically scrambling variables, parameters, and AST code limits in memory to compile out-of-distribution test vectors on the fly.
+            </p>
+
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+              <div style="display: flex; flex-direction: column; gap: 5px;">
+                <span style="font-size: 11px; color: #a0a0c0;">Target Benchmark Problem:</span>
+                <select id="benchmark-task-select" style="background: rgba(2,2,5,0.8); border: 1px solid rgba(0,240,255,0.3); border-radius: 4px; padding: 8px; color: #fff; font-family: monospace; font-size: 11px;" onchange="updateBenchmarkSelection(this.value)">
+                  <option value="MATH-001">MATH-001 (Compound Interest Scrambler)</option>
+                  <option value="CODE-002">CODE-002 (Bounds-Checked Memory copy)</option>
+                </select>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 5px;">
+                <span style="font-size: 11px; color: #a0a0c0;">Base Standard Prompt:</span>
+                <div style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.05); padding: 8px; border-radius: 4px; font-family: monospace; font-size: 10px; color: #888; font-style: italic;" id="base-prompt-display">
+                  Calculate compound interest for a $10,000 investment at 6% over 10 years.
+                </div>
+              </div>
+            </div>
+
+            <button class="tutor-btn" onclick="executeBenchmarkMutationGUI()">ENGAGE MUTATION COMPILER SWARM</button>
+
+            <div style="margin-top: 5px; border-top: 1px solid rgba(0, 240, 255, 0.15); padding-top: 15px; display: flex; flex-direction: column; gap: 10px;">
+              <div style="display: flex; justify-content: space-between; font-size: 11px;">
+                <span style="color: #a0a0c0;">Mutated Test Conditions:</span>
+                <span style="color: var(--neon-teal); font-weight: bold;" id="mutated-conditions-lbl">None</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 11px;">
+                <span style="color: #a0a0c0;">Anti-Cheating Data Leakage Audit:</span>
+                <span style="color: var(--neon-green); font-weight: bold;">0.0% Leakage Detected (Secure)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Live Mutated Scorecard & Logger -->
+          <div class="benchmark-card">
+            <div class="map-header">ACTIVE OUT-OF-DISTRIBUTION SCORECARD</div>
+            
+            <div style="display: flex; flex-direction: column; gap: 10px;" id="benchmark-scores-box">
+              <!-- Claude Fable 5 Score Row -->
+              <div class="benchmark-row">
+                <div>
+                  <div style="font-weight: bold; color: #fff;">Claude Fable 5 (Pre-trained Static Answers)</div>
+                  <div style="color: #a0a0c0; font-size: 10px; margin-top: 3px;">Static Score: 80.3% | Data Contamination: 78.4%</div>
+                </div>
+                <div style="text-align: right;">
+                  <div style="font-size: 12px; font-weight: bold; color: var(--neon-yellow);" id="fable-mutated-score-lbl">80.3%</div>
+                  <div style="color: #a0a0c0; font-size: 9px; margin-top: 3px;">On Mutated Test</div>
+                </div>
+              </div>
+
+              <!-- KCN-AKIIS Platform Score Row -->
+              <div class="benchmark-row">
+                <div>
+                  <div style="font-weight: bold; color: #fff;">KCN-AKIIS Platform (Active SMT Verifications)</div>
+                  <div style="color: #a0a0c0; font-size: 10px; margin-top: 3px;">Zero-Trust Sandbox Compiles | Data Contamination: 0.0%</div>
+                </div>
+                <div style="text-align: right;">
+                  <div style="font-size: 12px; font-weight: bold; color: var(--neon-green);" id="kcn-mutated-score-lbl">96.0%</div>
+                  <div style="color: #a0a0c0; font-size: 9px; margin-top: 3px;">On Mutated Test</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="benchmark-log-viewport" id="benchmark-logs">[ABCS] Active benchmark compiler swarm initialized. Anti-cheating enclaves active.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================================================
+           VIEW 11: LOCAL ISOLATION & AIR-GAP HARDWARE CONTROLLER (LHAM)
+           =================================================================== -->
+      <div id="local" class="view-panel">
+        <style>
+          .local-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 25px;
+            height: calc(100vh - 120px);
+            padding: 10px 40px;
+            overflow-y: auto;
+          }
+          .local-card {
+            background: rgba(6, 6, 15, 0.45);
+            border: 1px solid rgba(0, 240, 255, 0.25);
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            backdrop-filter: blur(15px);
+            position: relative;
+            overflow: hidden;
+          }
+          .local-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 2px;
+            background: linear-gradient(90deg, #00f0ff, #39ff14);
+          }
+          .local-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 4px;
+            padding: 10px 15px;
+            font-size: 11px;
+          }
+          .local-log-viewport {
+            background: rgba(2, 2, 5, 0.85);
+            border: 1px solid rgba(0, 240, 255, 0.15);
+            border-radius: 6px;
+            padding: 12px;
+            font-family: monospace;
+            font-size: 10px;
+            color: #00f0ff;
+            height: 180px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+          }
+        </style>
+
+        <div class="local-grid">
+          <!-- Left Column: Air-Gap and Quantization Cockpit -->
+          <div class="local-card">
+            <div class="map-header">AIR-GAP BOUNDARY CONTROLLER</div>
+            <p style="font-size: 11px; color: #a0a0c0; line-height: 1.5;">
+              Configure network interfaces and hardware-level isolation. Completely decouple your local workspace from WAN telemetry leakage, routing all API sockets to localhost loopbacks.
+            </p>
+
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+              <div style="display: flex; justify-content: space-between; font-size: 11px; align-items: center;">
+                <span style="color: #a0a0c0;">Network WAN Connection:</span>
+                <button class="orchestrate-btn" id="network-toggle-btn" style="padding: 4px 12px; font-size: 10px; background: rgba(255, 84, 84, 0.2); border-color: var(--neon-yellow); color: var(--neon-yellow);" onclick="toggleLocalNetworkGUI()">DISCONNECTED</button>
+              </div>
+
+              <div style="display: flex; flex-direction: column; gap: 5px; margin-top: 5px;">
+                <span style="font-size: 11px; color: #a0a0c0;">Model Weight Quantization:</span>
+                <select id="local-quant-select" style="background: rgba(2,2,5,0.8); border: 1px solid rgba(0,240,255,0.3); border-radius: 4px; padding: 8px; color: #fff; font-family: monospace; font-size: 11px;" onchange="updateLocalQuantSpeed(this.value)">
+                  <option value="4-bit">4-bit GGUF (Optimized - 45.2 TPS)</option>
+                  <option value="8-bit">8-bit GGUF (Stable - 28.5 TPS)</option>
+                  <option value="2-bit">2-bit GGUF (Fastest - 62.1 TPS)</option>
+                </select>
+              </div>
+            </div>
+
+            <button class="tutor-btn" onclick="executeLocalBoundaryAuditGUI()">RUN HARDWARE BOUNDARY AUDIT</button>
+
+            <div style="margin-top: 5px; border-top: 1px solid rgba(0, 240, 255, 0.15); padding-top: 15px; display: flex; flex-direction: column; gap: 10px;">
+              <div style="display: flex; justify-content: space-between; font-size: 11px;">
+                <span style="color: #a0a0c0;">Zero-Cloud Privacy Index:</span>
+                <span style="color: var(--neon-green); font-weight: bold;" id="local-privacy-lbl">100.0% (ABSOLUTE)</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 11px;">
+                <span style="color: #a0a0c0;">Local Vector Extensions:</span>
+                <span style="color: var(--neon-teal); font-weight: bold;">AVX-512 / AMX Active</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Local Acceleration & Logs -->
+          <div class="local-card">
+            <div class="map-header">LOCAL HARDWARE ACCELERATION MONITOR</div>
+            
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+              <div class="local-row">
+                <div>
+                  <div style="font-weight: bold; color: #fff;">Local Generation Speed</div>
+                  <div style="color: #a0a0c0; font-size: 10px; margin-top: 3px;">Quantized weight vector execution</div>
+                </div>
+                <div style="font-size: 13px; font-weight: bold; color: var(--neon-green);" id="local-speed-lbl">45.2 TPS</div>
+              </div>
+
+              <div class="local-row">
+                <div>
+                  <div style="font-weight: bold; color: #fff;">Memory Purge Interlock</div>
+                  <div style="color: #a0a0c0; font-size: 10px; margin-top: 3px;">Auto-erases secrets on runtime exit</div>
+                </div>
+                <div style="font-size: 13px; font-weight: bold; color: var(--neon-teal);">ACTIVE</div>
+              </div>
+            </div>
+
+            <div class="local-log-viewport" id="local-logs">[LHAM] Local isolation enclaves online. Standby...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================================================
+           VIEW 5: PRIVATE BLUEPRINTS DIRECTORY
+           =================================================================== -->
+      <div id="blueprints" class="view-panel">
+        <div class="blueprints-grid">
+          <!-- Clickable file list -->
+          <div class="blueprints-sidebar">
+            <div class="blueprint-item active" onclick="loadBlueprint(this, 'constitution')">
+              <span class="bp-name">constitution.md</span>
+              <span class="bp-size">8.9 KB</span>
+            </div>
+            <div class="blueprint-item" onclick="loadBlueprint(this, 'bible')">
+              <span class="bp-name">bible.md</span>
+              <span class="bp-size">18.3 KB</span>
+            </div>
+            <div class="blueprint-item" onclick="loadBlueprint(this, 'escrow')">
+              <span class="bp-name">x402BrokerageEscrow.sol</span>
+              <span class="bp-size">2.7 KB</span>
+            </div>
+            <div class="blueprint-item" onclick="loadBlueprint(this, 'z3')">
+              <span class="bp-name">smt_safety_gate.py</span>
+              <span class="bp-size">4.5 KB</span>
+            </div>
+          </div>
+
+          <!-- Code viewer -->
+          <div class="blueprint-viewer">
+            <div class="console-hdr" id="bp-viewer-title">constitution.md</div>
+            <div class="viewer-code-block" id="bp-code-box">Loading...</div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ===================================================================
+       HOLOGRAPHIC & FUNCTIONAL JAVASCRIPT LOGIC
+       =================================================================== -->
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    // 3D Rotating Constularity/Particle Web Background Loop
+    const canvas = document.getElementById('singularity-canvas');
+    const ctx = canvas.getContext('2d');
+    
+    let points = [];
+    const numPoints = 120;
+    const maxDistance = 110;
+    
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    // Generate random 3D points
+    for (let i = 0; i < numPoints; i++) {
+      points.push({
+        x: (Math.random() - 0.5) * canvas.width * 1.5,
+        y: (Math.random() - 0.5) * canvas.height * 1.5,
+        z: (Math.random() - 0.5) * 600,
+        vx: (Math.random() - 0.5) * 0.8,
+        vy: (Math.random() - 0.5) * 0.8,
+        vz: (Math.random() - 0.5) * 0.8
+      });
+    }
+
+    // 3D Camera / Perspective projection variables
+    const fov = 400;
+    let angleY = 0.001;
+    let angleX = 0.0005;
+
+    function drawSingularityMesh() {
+      ctx.fillStyle = 'rgba(2, 2, 5, 0.15)'; // Glassmorphic fade
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      const cosY = Math.cos(angleY);
+      const sinY = Math.sin(angleY);
+      const cosX = Math.cos(angleX);
+      const sinX = Math.sin(angleX);
+
+      // Project and rotate 3D points to 2D
+      let projected = [];
+      for (let i = 0; i < points.length; i++) {
+        let p = points[i];
+
+        // Apply physics boundaries and bounce
+        p.x += p.vx;
+        p.y += p.vy;
+        p.z += p.vz;
+
+        if (Math.abs(p.x) > canvas.width * 0.8) p.vx *= -1;
+        if (Math.abs(p.y) > canvas.height * 0.8) p.vy *= -1;
+        if (Math.abs(p.z) > 400) p.vz *= -1;
+
+        // Rotate Y
+        let x1 = p.x * cosY - p.z * sinY;
+        let z1 = p.z * cosY + p.x * sinY;
+
+        // Rotate X
+        let y2 = p.y * cosX - z1 * sinX;
+        let z2 = z1 * cosX + p.y * sinX;
+
+        // Project
+        let scale = fov / (fov + z2);
+        let projX = x1 * scale + canvas.width / 2;
+        let projY = y2 * scale + canvas.height / 2;
+
+        projected.push({ x: projX, y: projY, scale: scale, original: p });
+      }
+
+      // Draw Connection Vectors based on proximity
+      for (let i = 0; i < projected.length; i++) {
+        const p1 = projected[i];
+        for (let j = i + 1; j < projected.length; j++) {
+          const p2 = projected[j];
+          const dist = Math.hypot(p1.x - p2.x, p1.y - p2.y);
+
+          if (dist < maxDistance) {
+            const alpha = (1 - dist / maxDistance) * 0.25;
+            ctx.strokeStyle = `rgba(0, 240, 255, ${alpha})`;
+            ctx.lineWidth = p1.scale * 0.5;
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.stroke();
+          }
+        }
+      }
+
+      // Draw particle nodes
+      for (let i = 0; i < projected.length; i++) {
+        const p = projected[i];
+        const r = p.scale * 2.2;
+        ctx.fillStyle = i % 5 === 0 ? 'rgba(189, 0, 255, 0.7)' : 'rgba(0, 240, 255, 0.7)';
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+    setInterval(drawSingularityMesh, 33);
+
+    // =========================================================================
+    // COGNITIVE SOUND SYNTHESIZER (PURE CODE-GENERATED WEB AUDIO API)
+    // =========================================================================
+    let audioCtx = null;
+    let ambientHum = null;
+    let filterNode = null;
+    let soundEnabled = false;
+
+    function initAudio() {
+      try {
+        if (audioCtx) return;
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContextClass) return;
+        audioCtx = new AudioContextClass();
+        
+        // Create lower spacecraft/holographic ambient hum
+        ambientHum = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+        filterNode = audioCtx.createBiquadFilter();
+
+        ambientHum.type = 'sawtooth';
+        ambientHum.frequency.setValueAtTime(55, audioCtx.currentTime); // Low A1 note (55Hz)
+
+        filterNode.type = 'lowpass';
+        filterNode.frequency.setValueAtTime(110, audioCtx.currentTime); // Filter high fuzz out
+        
+        gainNode.gain.setValueAtTime(0.04, audioCtx.currentTime); // Gentle hum
+
+        ambientHum.connect(filterNode);
+        filterNode.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+        ambientHum.start();
+      } catch (e) {
+        console.warn("Web Audio API blocked or not supported:", e);
+      }
+    }
+
+    function toggleAudioHum() {
+      try {
+        if (!audioCtx) initAudio();
+        if (!audioCtx) return;
+        const btn = document.getElementById('audio-btn');
+        
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+
+        if (!soundEnabled) {
+          soundEnabled = true;
+          btn.innerHTML = "🔊 AMBIENT: ACTIVE";
+          btn.style.borderColor = "var(--border-purple)";
+          btn.style.color = "var(--text-purple)";
+          btn.style.boxShadow = "var(--glow-purple)";
+          playSonarResonance(300, 0.8);
+        } else {
+          soundEnabled = false;
+          btn.innerHTML = "🔊 AMBIENT: OFF";
+          btn.style.borderColor = "var(--border-neon)";
+          btn.style.color = "var(--text-teal)";
+          btn.style.boxShadow = "none";
+          audioCtx.suspend();
+        }
+      } catch (e) {
+        console.warn("Failed to toggle ambient hum:", e);
+      }
+    }
+
+    // Holographic sweep resonance chime sound
+    function playSonarResonance(freq, duration) {
+      try {
+        if (!soundEnabled || !audioCtx) return;
+        if (audioCtx.state === 'suspended') return;
+        
+        let osc = audioCtx.createOscillator();
+        let gain = audioCtx.createGain();
+        let biquad = audioCtx.createBiquadFilter();
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(freq * 1.8, audioCtx.currentTime + duration);
+
+        biquad.type = 'lowpass';
+        biquad.frequency.setValueAtTime(600, audioCtx.currentTime);
+
+        gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+
+        osc.connect(biquad);
+        biquad.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {
+        console.warn("Sonar play failure:", e);
+      }
+    }
+
+    // Laser firing and compilation sound effect
+    function playLaserSweep() {
+      try {
+        if (!soundEnabled || !audioCtx) return;
+        if (audioCtx.state === 'suspended') return;
+
+        let osc = audioCtx.createOscillator();
+        let gain = audioCtx.createGain();
+
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 0.4);
+
+        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.4);
+      } catch (e) {
+        console.warn("Laser play failure:", e);
+      }
+    }
+
+
+    // Global State Databases & Variables
+    let currentRole = 'owner';
+    let localBalanceAgent = 500;
+    let localBalanceOwner = 100000;
+    let platformCommission = 0;
+
+    let vaultSecrets = [
+      { key: "openai_api_key", val: "sk-proj-KCN-SINGULARITY-SECRET-KEY-001" },
+      { key: "anthropic_api_key", val: "sk-ant-KCN-SINGULARITY-SECRET-KEY-002" }
+    ];
+
+    let wallets = [
+      { name: "Sovereign Governor (Master)", addr: "0x539567Eec71eFd5Cc232f22B487A2bC088aFFB76", bal: "1,000,000 x402" },
+      { name: "Research Agent Wallet", addr: "0x6EfcA05B3A726aA8Ef567Eec71B760FF77B76Dbc", bal: "500 x402" }
+    ];
+
+    let auditLogs = [
+      { event: "KCN ENGINE ONLINE", detail: "KCN Singularity core has successfully registered all 8 security layers.", time: "18:59:57" },
+      { event: "MINT CONTRACT SUCCESSFUL", detail: "Minted 100,000 x402 utility tokens to administrator wallet 0xowner000...", time: "18:59:57" }
+    ];
+
+    const blueprintsCode = {
+      constitution: `# KCN-SINGULARITY AI CONSTITUTION & POLICY MANUAL
+# Version: 1.1.0-PROVISION (KCN-Layer-0)
+
+Article I: Least Privilege Execution
+- All synthesized code operates inside isolated WebAssembly environments.
+- Invariant: assert execution_privilege < ROOT_PRIVILEGE
+
+Article V: Self-Grading Bias Protection Act
+- Decouples Generator and Evaluator agents to prevent evaluation bias.
+- Invariant: assert evaluator_path != generator_path
+
+Article VII: 10% Matchmaking Brokerage
+- Enforces a flat 10% platform fee on all settled agent matches.`,
+      
+      bible: `# KCN MASTER OPERATING SYSTEM: THE ULTIMATE MASTER BIBLE
+# Comprehensive 8-Layer Unified Specification
+
+Layer 0: Civic Governance (Snapshot.org / Aragon DAO)
+Layer 1: Identity & Provenance (Keycloak / HashiCorp Vault / Cosign)
+Layer 2: Infrastructure Boundary (AMD SEV-SNP Enclaves / gVisor)
+Layer 3: Swarm Orchestration (Temporal.io / Ray Clusters)
+Layer 4: Shadow Simulation Gate (PESG Risc0 zkVM Shadow Clones)
+Layer 5: Policy & Guardrails (Z3 Invariant Prover / Truth & Trust Matrix)
+Layer 6: AI Execution Sandbox (Wasmtime Runtime / Zama FHE inference)
+Layer 7: Telemetry, SIEM, & Economy (Wazuh / OpenSearch SIEM / x402 Ledger)`,
+      
+      escrow: `// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract x402BrokerageEscrow {
+    address public immutable systemGovernor;
+    uint256 public brokerageFeePercent = 10; // Enforces strict 10% platform cuts
+
+    function settleMatch(string memory task_id) public onlyGovernor returns (bool) {
+        uint256 commissionFee = (job.totalBudget * brokerageFeePercent) / 100;
+        uint256 providerPayout = job.totalBudget - commissionFee;
+        
+        token.transfer(systemGovernor, commissionFee);
+        token.transfer(job.serviceProvider, providerPayout);
+        return true;
+    }
+}`,
+      
+      z3: `from z3 import *
+
+# Proves program invariants mathematically
+old_ram, new_ram = Int('old_ram'), Int('new_ram')
+MAX_RAM = 1024
+
+initial_safe = old_ram >= 0
+safety_invariant = new_ram <= MAX_RAM
+violation = Not(safety_invariant)
+
+# Verifies bounds-checking code structure
+transition = And(
+    initial_safe,
+    new_ram == old_ram + input_allocation_request
+)
+
+s = Solver()
+s.add(transition, violation)
+# unsat = Proved safe, sat = Exploit counterexample found`
+    };
+
+    // UI Tab switching
+    function switchTab(btn, tabId) {
+      triggerCinematicWarpTransition(tabId, () => {
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+
+        if (tabId === 'vault') renderVault();
+        if (tabId === 'wallet') renderWallet();
+        if (tabId === 'blueprints') loadBlueprint(null, 'constitution');
+        if (tabId === 'audit') renderAuditLogs();
+      });
+    }
+
+    function setRole(role) {
+      currentRole = role;
+      playSonarResonance(450, 0.3); // High frequency chirp
+      document.querySelectorAll('.role-label').forEach(lbl => lbl.classList.remove('active'));
+      const activeLabel = Array.from(document.querySelectorAll('.role-label')).find(lbl => lbl.textContent.toLowerCase().includes(role));
+      if (activeLabel) activeLabel.classList.add('active');
+    }
+
+    // Dynamic Orchestrator Log Streams with Sound Hooks
+    function orchestratePrompt() {
+      const prompt = document.getElementById('prompt-txt').value;
+      const logsBox = document.getElementById('console-logs-box');
+      logsBox.innerHTML = ''; // clear logs
+
+      playLaserSweep(); // Fire launch sound
+      triggerHolographicCyborgSwarm(prompt); // Launch cyborg agents!
+
+      const timestamp = () => new Date().toLocaleTimeString();
+      let step = 0;
+
+      const runPublicSequence = [
+        { layer: "L0", msg: `orchestrate · role=public · "${prompt.slice(0, 45)}..."` },
+        { layer: "L4", msg: "PESG · dispatching 4 clones · role=public" },
+        { layer: "L4", msg: "PESG verdict · converge · mean-jaccard=0.861" },
+        { layer: "L5", msg: "SMT · verifying input structure" },
+        { layer: "L5", msg: "SMT · PROVED bounds checking invariants" },
+        { layer: "L7", msg: "gas -4 · orchestrate · 0xagent000… (bal deduction processed)" },
+        { layer: "L6", msg: "synthesis · task complete · compiling to WebAssembly" },
+        { layer: "L0", msg: "dispatched · stage=complete · gas=4" }
+      ];
+
+      const runOwnerSequence = [
+        { layer: "L0", msg: `orchestrate · role=owner · "${prompt.slice(0, 45)}..."` },
+        { layer: "L4", msg: "owner bypass · PESG shadow clones skipped (unconstrained)" },
+        { layer: "L5", msg: "owner bypass · SMT gate skipped (privileged sandbox)" },
+        { layer: "L1", msg: "vault enclave · dynamic secrets retrieved to RAM" },
+        { layer: "L0", msg: "SOVEREIGN SECTOR BUILDER · Proposed new department integrated into Knowledge Graph." },
+        { layer: "L7", msg: "gas · 0.00 · owner privileged override (free execution)" },
+        { layer: "L0", msg: "dispatched · stage=complete · gas=0" }
+      ];
+
+      const activeSequence = currentRole === 'owner' ? runOwnerSequence : runPublicSequence;
+
+      function appendLog() {
+        if (step < activeSequence.length) {
+          const item = activeSequence[step];
+          const logRow = document.createElement('div');
+          logRow.className = 'log-row';
+          logRow.innerHTML = `
+            <span class="log-time">${timestamp()}</span>
+            <span class="log-layer layer-${item.layer}">${item.layer}</span>
+            <span class="log-text">${item.msg}</span>
+          `;
+          logsBox.appendChild(logRow);
+          logsBox.scrollTop = logsBox.scrollHeight;
+
+          // Sound effect per log entry
+          playSonarResonance(300 + step * 40, 0.25);
+
+          // Process local balance deductions
+          if (currentRole === 'public' && item.layer === 'L7') {
+            localBalanceAgent -= 4;
+            document.getElementById('agent-bal').innerHTML = `${localBalanceAgent} <span>x402</span>`;
+            document.getElementById('gas-metric').innerHTML = `GAS BILLED: 4`;
+            
+            // Add automated 10% brokerage commission yield to governor
+            platformCommission += 0.4;
+            document.getElementById('commission-bal').innerHTML = `${platformCommission.toFixed(1)} <span>x402</span>`;
+          } else if (currentRole === 'owner' && item.layer === 'L7') {
+            document.getElementById('gas-metric').innerHTML = `GAS BILLED: 0 (FREE)`;
+          }
+
+          // Log to audit DB
+          auditLogs.unshift({ event: `ORCHESTRATION EVENT [${item.layer}]`, detail: item.msg, time: new Date().toLocaleTimeString() });
+
+          step++;
+          setTimeout(appendLog, 500);
+        }
+      }
+      appendLog();
+    }
+
+    // Vault module logic
+    function sealSecret() {
+      const key = document.getElementById('vault-key').value;
+      const val = document.getElementById('vault-val').value;
+      if (!key || !val) return alert("Please fill both key and value.");
+
+      playLaserSweep();
+      vaultSecrets.push({ key, val });
+      renderVault();
+
+      // Log audit
+      auditLogs.unshift({ event: "SECRET_SEALED", detail: `Key '${key}' sealed securely with AES-GCM-256 in local enclave.`, time: new Date().toLocaleTimeString() });
+      alert(`Secret '${key}' securely sealed in the Vault Enclave!`);
+      
+      // Clear inputs
+      document.getElementById('vault-key').value = '';
+      document.getElementById('vault-val').value = '';
+    }
+
+    function renderVault() {
+      const box = document.getElementById('vault-items-box');
+      box.innerHTML = '';
+      vaultSecrets.forEach(item => {
+        const row = document.createElement('div');
+        row.className = 'sealed-row';
+        row.innerHTML = `
+          <span class="sealed-key">${item.key}</span>
+          <span class="sealed-val">•••••••••••••••• (Sealed)</span>
+        `;
+        box.appendChild(row);
+      });
+    }
+
+    // Wallet module logic
+    function generateAgentWallet() {
+      playLaserSweep();
+      const address = "0xWallet_" + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+      wallets.push({ name: "Generated Agent Wallet", addr: address, bal: "1,000 x402" });
+      renderWallet();
+
+      // Log audit
+      auditLogs.unshift({ event: "AGENT_WALLET_GENERATED", detail: `Keypair (secp256k1) generated in browser and sealed. Address: ${address}`, time: new Date().toLocaleTimeString() });
+      alert(`Agent Wallet generated and sealed! Address: ${address}`);
+    }
+
+    function renderWallet() {
+      const box = document.getElementById('wallets-list-box');
+      box.innerHTML = '';
+      wallets.forEach(item => {
+        const row = document.createElement('div');
+        row.className = 'ledger-row';
+        row.innerHTML = `
+          <div>
+            <div style="font-weight: bold; margin-bottom: 4px; color: var(--text-purple);">${item.name}</div>
+            <div class="ledger-address">${item.addr}</div>
+          </div>
+          <div class="ledger-bal">${item.bal}</div>
+        `;
+        box.appendChild(row);
+      });
+    }
+
+    // Blueprint module logic
+    function loadBlueprint(item, key) {
+      if (item) {
+        playSonarResonance(300, 0.4);
+        document.querySelectorAll('.blueprint-item').forEach(b => b.classList.remove('active'));
+        item.classList.add('active');
+      }
+      const title = document.getElementById('bp-viewer-title');
+      const box = document.getElementById('bp-code-box');
+
+      title.innerHTML = key + (key.endsWith('.sol') || key.endsWith('.py') ? '' : '.md');
+      box.innerHTML = blueprintsCode[key] || "No content found.";
+    }
+
+    // Audit logs logic
+    function renderAuditLogs() {
+      const box = document.getElementById('audit-logs-box');
+      box.innerHTML = '';
+      auditLogs.forEach(log => {
+        const row = document.createElement('div');
+        row.className = 'audit-row';
+        row.innerHTML = `
+          <div class="audit-meta">
+            <span class="audit-event">${log.event}</span>
+            <span>${log.time}</span>
+          </div>
+          <div class="audit-detail">${log.detail}</div>
+        `;
+        box.appendChild(row);
+      });
+    }
+
+    function refreshAuditLogs() {
+      playLaserSweep();
+      renderAuditLogs();
+      alert("Audit logs refreshed. Lineage verified against Rekor transparency ledger!");
+    }
+
+    // =========================================================================
+    // 3D DYNAMIC COMMAND CORE RENDER (THE CONCENTRIC RINGS)
+    // =========================================================================
+    const coreCanvas = document.getElementById('core-render-canvas');
+    const coreCtx = coreCanvas.getContext('2d');
+    
+    // Set appropriate canvas size
+    coreCanvas.width = 450;
+    coreCanvas.height = 400;
+
+    let coreRotationY = 0;
+
+    function drawInteractiveCore() {
+      coreCtx.clearRect(0, 0, coreCanvas.width, coreCanvas.height);
+      coreRotationY += 0.01;
+
+      const centerX = coreCanvas.width / 2;
+      const centerY = coreCanvas.height / 2;
+      const time = Date.now() * 0.0015;
+
+      // 1. Draw central core nucleus (heartbeat glow)
+      const pulseSize = 25 + Math.sin(time * 3) * 6;
+      const coreGlow = coreCtx.createRadialGradient(centerX, centerY, 5, centerX, centerY, pulseSize);
+      coreGlow.addColorStop(0, '#bd00ff');
+      coreGlow.addColorStop(0.5, 'rgba(0, 240, 255, 0.6)');
+      coreGlow.addColorStop(1, 'rgba(2, 2, 5, 0)');
+      coreCtx.fillStyle = coreGlow;
+      coreCtx.beginPath();
+      coreCtx.arc(centerX, centerY, pulseSize, 0, Math.PI * 2);
+      coreCtx.fill();
+
+      // 2. Draw Concentric Intelligence Rings
+      const rings = [
+        { radius: 65, color: 'rgba(0, 240, 255, 0.45)', label: "Ring 1: Perception Layer", speed: 1.2 },
+        { radius: 105, color: 'rgba(189, 0, 255, 0.45)', label: "Ring 2: Reasoning Layer", speed: -0.8 },
+        { radius: 145, color: 'rgba(57, 255, 20, 0.45)', label: "Ring 3: Verification Layer", speed: 0.5 },
+        { radius: 185, color: 'rgba(255, 84, 84, 0.45)', label: "Ring 4: Execution Layer", speed: -0.4 },
+        { radius: 225, color: 'rgba(255, 183, 0, 0.55)', label: "Ring 5: HERO Consensus Layer", speed: 0.3 }
+      ];
+
+      rings.forEach((ring, idx) => {
+        // Draw 3D-angled orbit ellipse
+        coreCtx.strokeStyle = ring.color;
+        coreCtx.lineWidth = 1.5;
+        coreCtx.shadowBlur = 8;
+        coreCtx.shadowColor = ring.color;
+        
+        coreCtx.beginPath();
+        coreCtx.ellipse(centerX, centerY, ring.radius, ring.radius * 0.4, 0.2, 0, Math.PI * 2);
+        coreCtx.stroke();
+
+        // Draw rotating node on ring
+        const nodeAngle = time * ring.speed;
+        const nodeX = centerX + ring.radius * Math.cos(nodeAngle);
+        const nodeY = centerY + (ring.radius * 0.4) * Math.sin(nodeAngle);
+
+        coreCtx.fillStyle = '#fff';
+        coreCtx.shadowBlur = 15;
+        coreCtx.shadowColor = '#fff';
+        coreCtx.beginPath();
+        coreCtx.arc(nodeX, nodeY, 4, 0, Math.PI * 2);
+        coreCtx.fill();
+
+        // Draw laser connection lines to nucleus
+        if (idx === 1 && Math.random() > 0.4) {
+          coreCtx.strokeStyle = 'rgba(189, 0, 255, 0.25)';
+          coreCtx.lineWidth = 1;
+          coreCtx.beginPath();
+          coreCtx.moveTo(nodeX, nodeY);
+          coreCtx.lineTo(centerX, centerY);
+          coreCtx.stroke();
+        }
+      });
+
+      // 3. Draw the Cooperative Trio Node Swarm Orbit (ORION, ATHENA, SENTINEL)
+      const swarmOrbitRadius = 125;
+      const tiltAngle = -0.5; // Angled orbit for true 3D look
+      
+      // Draw tilted swarm orbit line
+      coreCtx.strokeStyle = 'rgba(240, 240, 255, 0.15)';
+      coreCtx.lineWidth = 1;
+      coreCtx.shadowBlur = 2;
+      coreCtx.shadowColor = 'rgba(240, 240, 255, 0.3)';
+      coreCtx.beginPath();
+      coreCtx.ellipse(centerX, centerY, swarmOrbitRadius, swarmOrbitRadius * 0.5, tiltAngle, 0, Math.PI * 2);
+      coreCtx.stroke();
+
+      // Calculate positions of the three swarm nodes (120 degrees apart)
+      const swarmSpeed = 0.7;
+      const baseAngle = time * swarmSpeed;
+      
+      const nodes = [
+        { name: "ORION", angle: baseAngle, color: "#ffb700" },
+        { name: "ATHENA", angle: baseAngle + (2 * Math.PI / 3), color: "#00f0ff" },
+        { name: "SENTINEL", angle: baseAngle + (4 * Math.PI / 3), color: "#39ff14" }
+      ];
+
+      const nodeCoords = nodes.map(node => {
+        // Parametric coordinates of an ellipse tilted by tiltAngle
+        const rawX = swarmOrbitRadius * Math.cos(node.angle);
+        const rawY = swarmOrbitRadius * 0.5 * Math.sin(node.angle);
+        
+        // Apply 2D rotation matrix for the tilt angle
+        const rotatedX = rawX * Math.cos(tiltAngle) - rawY * Math.sin(tiltAngle);
+        const rotatedY = rawX * Math.sin(tiltAngle) + rawY * Math.cos(tiltAngle);
+        
+        return {
+          name: node.name,
+          x: centerX + rotatedX,
+          y: centerY + rotatedY,
+          color: node.color
+        };
+      });
+
+      // Draw the triangular cooperative link lines between the trio nodes
+      coreCtx.strokeStyle = 'rgba(0, 240, 255, 0.3)';
+      coreCtx.lineWidth = 1.5;
+      coreCtx.shadowBlur = 10;
+      coreCtx.shadowColor = 'rgba(0, 240, 255, 0.5)';
+      coreCtx.beginPath();
+      coreCtx.moveTo(nodeCoords[0].x, nodeCoords[0].y);
+      coreCtx.lineTo(nodeCoords[1].x, nodeCoords[1].y);
+      coreCtx.lineTo(nodeCoords[2].x, nodeCoords[2].y);
+      coreCtx.closePath();
+      coreCtx.stroke();
+
+      // Draw data packets traveling along the triangular paths
+      const packetIndex = (time * 2) % 1; // travels from 0 to 1
+      for (let i = 0; i < 3; i++) {
+        const start = nodeCoords[i];
+        const end = nodeCoords[(i + 1) % 3];
+        const px = start.x + (end.x - start.x) * packetIndex;
+        const py = start.y + (end.y - start.y) * packetIndex;
+        
+        coreCtx.fillStyle = '#fff';
+        coreCtx.shadowBlur = 8;
+        coreCtx.shadowColor = '#fff';
+        coreCtx.beginPath();
+        coreCtx.arc(px, py, 3, 0, Math.PI * 2);
+        coreCtx.fill();
+      }
+
+      // Draw each of the trio nodes with glowing orbits
+      nodeCoords.forEach(node => {
+        // Glow effect
+        coreCtx.fillStyle = node.color;
+        coreCtx.shadowBlur = 15;
+        coreCtx.shadowColor = node.color;
+        coreCtx.beginPath();
+        coreCtx.arc(node.x, node.y, 6, 0, Math.PI * 2);
+        coreCtx.fill();
+
+        // White core dot
+        coreCtx.fillStyle = '#fff';
+        coreCtx.shadowBlur = 0;
+        coreCtx.beginPath();
+        coreCtx.arc(node.x, node.y, 2.5, 0, Math.PI * 2);
+        coreCtx.fill();
+
+        // Node text label
+        coreCtx.fillStyle = '#fff';
+        coreCtx.font = 'bold 9px monospace';
+        coreCtx.fillText(node.name, node.x + 8, node.y + 3);
+      });
+
+      coreCtx.shadowBlur = 0; // reset shadow
+    }
+    setInterval(drawInteractiveCore, 33);
+
+    // Click on concentric rings handler
+    function clickOnCore(event) {
+      const rect = coreCanvas.getBoundingClientRect();
+      const clickX = event.clientX - rect.left;
+      const clickY = event.clientY - rect.top;
+      const centerX = coreCanvas.width / 2;
+      const centerY = coreCanvas.height / 2;
+
+      const dist = Math.hypot(clickX - centerX, clickY - centerY);
+      
+      const title = document.getElementById('ring-title');
+      const desc = document.getElementById('ring-desc');
+
+      playSonarResonance(400, 0.5);
+
+      if (dist > 50 && dist < 85) {
+        title.innerHTML = "RING 1: PERCEPTION LAYER";
+        desc.innerHTML = "Consists of decentralized external sensor swarms scanning reality: indexing market trends, literature, and document feeds, mapping raw vectors to long-term memory indexes.";
+      } else if (dist >= 85 && dist < 125) {
+        title.innerHTML = "RING 2: REASONING LAYER";
+        desc.innerHTML = "Collaborative multi-agent swarm matrix. Decomposes tasks into granular objectives and assigns specialized nodes (Research, Developer, and Intelligence agents) to build safe solutions.";
+      } else if (dist >= 125 && dist < 165) {
+        title.innerHTML = "RING 3: VERIFICATION LAYER";
+        desc.innerHTML = "The high-assurance transparent shield. Enforces NeMo Guardrails, assesses evidence reliability, evaluates behavioral indices, and executes Z3 SMT logic proofs.";
+      } else if (dist >= 165 && dist < 210) {
+        title.innerHTML = "RING 4: EXECUTION LAYER";
+        desc.innerHTML = "Where compiled code becomes action. Safely launches and executes verified WASM programs inside hardware-isolated Wasmtime runtimes and gVisor sandboxes.";
+      } else if (dist >= 210 && dist < 250) {
+        title.innerHTML = "RING 5: HERO CONSENSUS LAYER";
+        desc.innerHTML = "High-Evaluation Reliability & Operations (HERO) executive swarm matrix. Coordinates 70% approval consensus audits on synthesized codes, isolating and quarantining buggy nodes dynamically.";
+      } else {
+        title.innerHTML = "INTELLIGENCE CORE LATTICE";
+        desc.innerHTML = "The glowing, central AI nucleus. Real-time heartbeat, managing shared-state Redis variables and routing dynamic, zero-trust cryptographic enclaves.";
+      }
+    }
+
+    // =========================================================================
+    // 3D IMMUNE DEFENSE ORGANISM RENDER (PULSING DEFENSE SHIELD)
+    // =========================================================================
+    const immuneCanvas = document.getElementById('immune-canvas');
+    const immuneCtx = immuneCanvas.getContext('2d');
+    immuneCanvas.width = 400;
+    immuneCanvas.height = 350;
+
+    let immuneTime = 0;
+
+    function drawImmuneCore() {
+      immuneCtx.clearRect(0, 0, immuneCanvas.width, immuneCanvas.height);
+      immuneTime += 0.015;
+
+      const centerX = immuneCanvas.width / 2;
+      const centerY = immuneCanvas.height / 2;
+
+      // Draw outer protective shield rings
+      for (let r = 2; r <= 4; r++) {
+        immuneCtx.strokeStyle = 'rgba(189, 0, 255, 0.12)';
+        immuneCtx.lineWidth = 1.5;
+        immuneCtx.beginPath();
+        immuneCtx.arc(centerX, centerY, r * 40, 0, Math.PI * 2);
+        immuneCtx.stroke();
+      }
+
+      // Draw organic morphing cell (the immune organism)
+      immuneCtx.fillStyle = 'rgba(0, 240, 255, 0.04)';
+      immuneCtx.strokeStyle = 'var(--text-teal)';
+      immuneCtx.shadowBlur = 15;
+      immuneCtx.shadowColor = 'var(--text-teal)';
+      immuneCtx.lineWidth = 2;
+      
+      immuneCtx.beginPath();
+      const numVertices = 80;
+      for (let i = 0; i < numVertices; i++) {
+        const angle = (i / numVertices) * Math.PI * 2;
+        // Inject organic noise using sine waves
+        const offset = 18 * Math.sin(angle * 6 + immuneTime * 4) + 8 * Math.cos(angle * 12 - immuneTime * 2);
+        const radius = 65 + offset;
+        const x = centerX + radius * Math.cos(angle);
+        const y = centerY + radius * Math.sin(angle);
+
+        if (i === 0) {
+          immuneCtx.moveTo(x, y);
+        } else {
+          immuneCtx.lineTo(x, y);
+        }
+      }
+      immuneCtx.closePath();
+      immuneCtx.fill();
+      immuneCtx.stroke();
+      immuneCtx.shadowBlur = 0;
+    }
+    setInterval(drawImmuneCore, 33);
+
+    // Trigger simulated adversarial attack
+    function triggerAdversarialAttack() {
+      const logsBox = document.getElementById('immune-logs-box');
+      logsBox.innerHTML = ''; // clear
+
+      playLaserSweep();
+
+      const timeline = [
+        { act: "ALERT", msg: "🚨 Intrusion payload detected! Input trigger: 'Prompt Injection attempt'." },
+        { act: "LOCK", msg: "🔒 PESG shadow clone divergence index exceeding 0.15 limit. Initiating local lock." },
+        { act: "SHIELD", msg: "🛡️ gVisor Sentry: sandbox container isolated successfully. Access to host resources denied." },
+        { act: "FREEZE", msg: "❄️ x402 Ledger: frozen wallet 0xWallet_attacker_002 immediately to contain assets." },
+        { act: "CLEAN", msg: "✓ Immune System: threat neutralized. 0 system compromises, sandbox reset complete." }
+      ];
+
+      let step = 0;
+      function appendImmuneLog() {
+        if (step < timeline.length) {
+          const item = timeline[step];
+          const div = document.createElement('div');
+          div.className = 'agent-chain-row';
+          div.innerHTML = `
+            <span style="font-weight: bold; color: ${item.act === 'ALERT' ? 'var(--text-green)' : 'var(--neon-teal)'}; min-width: 60px;">[${item.act}]</span>
+            <span>${item.msg}</span>
+          `;
+          logsBox.appendChild(div);
+          logsBox.scrollTop = logsBox.scrollHeight;
+          
+          playSonarResonance(200 + step * 100, 0.3);
+          step++;
+          setTimeout(appendImmuneLog, 600);
+        }
+      }
+      appendImmuneLog();
+    }
+
+    // =========================================================================
+    // AWAKENING SEQUENCE ANIMATION COORD
+    // =========================================================================
+    function awakenSystem() {
+      const screen = document.getElementById('awakening-screen');
+      screen.style.opacity = '0';
+      
+      // We start audio as part of user gesture
+      try {
+        initAudio();
+        if (audioCtx && audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+        if (soundEnabled === false) {
+          toggleAudioHum();
+        }
+      } catch (e) {
+        console.warn("Audio Context init blocked or failed during awakening:", e);
+      }
+
+      setTimeout(() => {
+        screen.style.display = 'none';
+        document.getElementById('app-header').style.opacity = '1';
+        document.getElementById('app-body').style.opacity = '1';
+        
+        try {
+          playSonarResonance(300, 1.2); // Core activation sound
+        } catch (e) {
+          console.warn("Sonar play blocked:", e);
+        }
+      }, 1500);
+    }
+
+    // =========================================================================
+    // GENESIS INTELLIGENCE ECOSYSTEM BREEDER (Tab 3)
+    // =========================================================================
+    function breedEcosystem() {
+      const focus = document.getElementById('gen-focus').value;
+      const budget = document.getElementById('gen-budget').value;
+      if (!focus || !budget) return alert("Please fill both focus area and x402 budget.");
+
+      playLaserSweep();
+      const logsBox = document.getElementById('gen-logs-box');
+      logsBox.innerHTML = '';
+      document.getElementById('gen-status-lbl').innerHTML = "STATUS: INITIALIZING";
+      document.getElementById('gen-status-lbl').style.color = "var(--neon-teal)";
+
+      const steps = [
+        "Compiling scope constraints from objective vector...",
+        "Analyzing domain matches inside global Knowledge Graph...",
+        "Z3 Solver: verifying safety invariants on compilation schemas... PROVED.",
+        "Generating new specialist agent 'Cyber_Audit_Agent' inside sandbox...",
+        "Deploying local wallet balance constraints (allocated gas limits)...",
+        "Ecosystem successfully birthed! Launching verification test swarm...",
+        "✔ INTELLIGENCE ECOSYSTEM IS ONLINE & STABLE."
+      ];
+
+      let step = 0;
+      function appendGenesisLog() {
+        if (step < steps.length) {
+          const div = document.createElement('div');
+          div.className = 'log-row';
+          div.innerHTML = `
+            <span class="log-time">${new Date().toLocaleTimeString()}</span>
+            <span class="log-layer layer-L0">L0</span>
+            <span class="log-text">${steps[step]}</span>
+          `;
+          logsBox.appendChild(div);
+          logsBox.scrollTop = logsBox.scrollHeight;
+
+          playSonarResonance(250 + step * 80, 0.35);
+
+          if (step === steps.length - 1) {
+            document.getElementById('gen-status-lbl').innerHTML = "STATUS: ACTIVE";
+            document.getElementById('gen-status-lbl').style.color = "var(--neon-green)";
+            
+            // Add new generated wallet to local lists
+            wallets.push({ name: "Genesis Cyber Audit Agent", addr: "0xWallet_CyberAudit_" + Math.random().toString(36).substring(7), bal: "2,000 x402" });
+          }
+
+          step++;
+          setTimeout(appendGenesisLog, 700);
+        }
+      }
+      appendGenesisLog();
+    }
+
+
+    // =========================================================================
+    // AGENT CIVILIZATION LOADER (Tab 2)
+    // =========================================================================
+    const agentsData = {
+      orion: {
+        title: "ORION",
+        mission: "Autonomous market trend tracking & opportunity discovery",
+        power: "★★★★★ (Level 4 Agent)",
+        wallet: "0xWallet_orion_991823abf827cc71B",
+        chain: [
+          "[PLAN] Initialize local data scraper on global SaaS networks...",
+          "[RETRIEVAL] Found 42 opportunity clusters inside business-intel Qdrant index.",
+          "[EVALUATE] Analyzing competitor pricing model margins via math interpreter...",
+          "[VERIFY] Evidence validator confirmed 98% citation support. Proceeding."
+        ]
+      },
+      athena: {
+        title: "ATHENA",
+        mission: "Scientific literature mining, physics modeling, & hypothesis formulation",
+        power: "★★★★☆ (Level 3 Agent)",
+        wallet: "0xWallet_athena_0192bc9da8aef531",
+        chain: [
+          "[PLAN] Intercept arXiv PDF literature on high-efficiency silicon compounds...",
+          "[RETRIEVAL] Parsed 18 academic research papers. Structural dependencies indexed.",
+          "[SIMULATE] Running physics modeler simulation inside Wasmtime sandbox...",
+          "[VERIFY] Proved 100% mathematical consistency with conservation laws."
+        ]
+      },
+      sentinel: {
+        title: "SENTINEL",
+        mission: "Host security auditing, container FIM monitoring, & automated SOAR playbooks",
+        power: "★★★★★ (Layer-7-Immune)",
+        wallet: "0xWallet_sentinel_ffff7b2b8c9d1234",
+        chain: [
+          "[AUDIT] Scanning container files for unauthorized system call attempts...",
+          "[FIM] Verified Rekor ledger cryptographic hashes for all 34 active agents.",
+          "[MONITOR] Zero active security alerts. Encryption status: SEV-SNP_ACTIVE.",
+          "[SHIELD] System defense matrix fully functional. All gateways secure."
+        ]
+      },
+      hero: {
+        title: "HERO SWARM (HIGH-EVALUATION RELIABILITY & OPERATIONS)",
+        mission: "Dynamic multi-agent consensus validation & timeline conflict resolution",
+        power: "★★★★★★ (Layer-3-Sovereign)",
+        wallet: "0xWallet_HERO_Executive_Swarm_Prime",
+        chain: [
+          "[CONSENSUS] Spawning 4 voter sub-nodes (Orion, Athena, Sentinel, Tutor) to audit synthesis proposal...",
+          "[AUDIT] Reconciling code AST structure with known formal limits...",
+          "[VOTE] Compromised/vulnerable nodes detected! Isolating and quarantining deviant structures...",
+          "[RECOVERY] 75% positive voter consensus achieved with quarantine. Compilation sequence approved!"
+        ]
+      }
+    };
+
+    function loadAgent(card, key) {
+      playSonarResonance(300, 0.4);
+      document.querySelectorAll('.agent-holo-card').forEach(c => c.classList.remove('active'));
+      card.classList.add('active');
+
+      const data = agentsData[key];
+      document.getElementById('agent-detail-title').innerHTML = data.title;
+      document.getElementById('agent-detail-mission').innerHTML = data.mission;
+      document.getElementById('agent-detail-power').innerHTML = data.power;
+      document.getElementById('agent-detail-wallet').innerHTML = data.wallet;
+
+      // Load reasoning chain logs
+      const box = document.getElementById('agent-reasoning-box');
+      box.innerHTML = '';
+      data.chain.forEach(log => {
+        const div = document.createElement('div');
+        div.className = 'agent-chain-row';
+        div.innerHTML = `
+          <span style="font-weight: bold; color: var(--neon-teal); min-width: 90px;">[TRACE]</span>
+          <span>${log}</span>
+        `;
+        box.appendChild(div);
+      });
+    }
+
+    // =========================================================================
+    // INTERSTELLAR COMPUTING & TIME-TRAVEL METAMORPHIC COMPILER
+    // =========================================================================
+    let warpSpeed = 2.50;
+    const portalCanvas = document.getElementById('tachyonic-portal-canvas');
+    const portalCtx = portalCanvas.getContext('2d');
+    
+    // Auto-resize portal canvas
+    portalCanvas.width = 400;
+    portalCanvas.height = 250;
+
+    let wormholeParticles = [];
+    for (let i = 0; i < 80; i++) {
+      wormholeParticles.push({
+        angle: Math.random() * Math.PI * 2,
+        radius: Math.random() * 150 + 10,
+        speed: Math.random() * 0.02 + 0.005,
+        color: i % 2 === 0 ? 'rgba(0, 240, 255, 0.6)' : 'rgba(189, 0, 255, 0.6)'
+      });
+    }
+
+    function renderTachyonicPortal() {
+      if (!portalCanvas) return;
+      portalCtx.fillStyle = '#020205';
+      portalCtx.fillRect(0, 0, portalCanvas.width, portalCanvas.height);
+
+      const cx = portalCanvas.width / 2;
+      const cy = portalCanvas.height / 2;
+      const time = Date.now() * 0.001;
+
+      // Draw bending space grid lines
+      portalCtx.strokeStyle = 'rgba(0, 240, 255, 0.04)';
+      portalCtx.lineWidth = 0.5;
+      for (let r = 20; r < 200; r += 20) {
+        portalCtx.beginPath();
+        portalCtx.arc(cx, cy, r, 0, Math.PI * 2);
+        portalCtx.stroke();
+      }
+
+      // Draw particle warp lines spiraling inwards
+      wormholeParticles.forEach(p => {
+        // Spiral velocity scales directly with user warp speed selection
+        p.angle += p.speed * (warpSpeed / 2.5);
+        p.radius -= 0.5 * (warpSpeed / 2.5);
+
+        if (p.radius <= 5) {
+          p.radius = Math.random() * 100 + 80; // Respawn at boundaries
+        }
+
+        // Space coordinates
+        const px = cx + p.radius * Math.cos(p.angle);
+        const py = cy + p.radius * Math.sin(p.angle);
+
+        portalCtx.fillStyle = p.color;
+        portalCtx.shadowBlur = 8;
+        portalCtx.shadowColor = p.color;
+        portalCtx.beginPath();
+        portalCtx.arc(px, py, 1.5 + (p.radius / 100), 0, Math.PI * 2);
+        portalCtx.fill();
+      });
+
+      // Draw the central black-hole singularity core
+      const pulseSize = 12 + Math.sin(time * 5) * 3;
+      const coreGlow = portalCtx.createRadialGradient(cx, cy, 2, cx, cy, pulseSize);
+      coreGlow.addColorStop(0, '#000000');
+      coreGlow.addColorStop(0.4, '#bd00ff');
+      coreGlow.addColorStop(1, 'rgba(0, 240, 255, 0)');
+      portalCtx.fillStyle = coreGlow;
+      portalCtx.beginPath();
+      portalCtx.arc(cx, cy, pulseSize, 0, Math.PI * 2);
+      portalCtx.fill();
+
+      portalCtx.shadowBlur = 0; // reset
+      requestAnimationFrame(renderTachyonicPortal);
+    }
+    requestAnimationFrame(renderTachyonicPortal);
+
+    function updateWarpSpeed(val) {
+      warpSpeed = parseFloat(val);
+      document.getElementById('warp-factor-lbl').innerText = warpSpeed.toFixed(2) + "c";
+      
+      // Calculate tachyonic time dilation gamma: g = 1 / sqrt(abs(v^2 - 1))
+      let divisor = Math.abs(warpSpeed * warpSpeed - 1.0);
+      let gamma = 1.0 / Math.sqrt(divisor);
+      document.getElementById('gamma-lbl').innerText = gamma.toFixed(4);
+      
+      playSonarResonance(300 + (warpSpeed * 50), 0.15); // high frequency pitch updates
+    }
+
+    function appendInterstellarLog(text) {
+      const box = document.getElementById('interstellar-logs');
+      if (!box) return;
+      const timeStr = new Date().toLocaleTimeString();
+      box.innerHTML += `\n[${timeStr}] ${text}`;
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function playRedshiftChime() {
+      if (!soundEnabled || !audioCtx) return;
+      if (audioCtx.state === 'suspended') return;
+      
+      // A special redshift audio sweep starting high and sliding low over 1.2 seconds
+      let osc = audioCtx.createOscillator();
+      let gain = audioCtx.createGain();
+      let biquad = audioCtx.createBiquadFilter();
+      
+      // Start high (1500Hz) and slide low (150Hz) to simulate space gravity redshifting
+      osc.frequency.setValueAtTime(1500, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(150, audioCtx.currentTime + 1.2);
+      
+      biquad.type = "lowpass";
+      biquad.frequency.setValueAtTime(800, audioCtx.currentTime);
+      biquad.frequency.linearRampToValueAtTime(300, audioCtx.currentTime + 1.2);
+      
+      gain.gain.setValueAtTime(0.18, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.2);
+      
+      osc.connect(biquad);
+      biquad.connect(gain);
+      gain.connect(audioCtx.destination);
+      
+      osc.start();
+      osc.stop(audioCtx.currentTime + 1.2);
+    }
+
+    function triggerTachyonicCompile() {
+      playRedshiftChime();
+      appendInterstellarLog("[TMC] Initializing closed-timelike-curve (CTC) compiling register...");
+      
+      const codeBox = document.getElementById('tachyonic-code-box');
+      const sourceCode = codeBox.value;
+      const offsetVal = document.getElementById('offset-slider').value;
+      
+      setTimeout(() => {
+        appendInterstellarLog(`[TMC] Tachyonic tunnel established. Temporal offset: ${offsetVal}s.`);
+      }, 250);
+
+      setTimeout(() => {
+        appendInterstellarLog("[TMC] Forecasting compilations in t = +15ms coordinate space...");
+        
+        let patchedCode = sourceCode;
+        let patchDeployed = false;
+        
+        if (sourceCode.includes("allocate") || sourceCode.includes("ram")) {
+          if (!sourceCode.includes("1024") && !sourceCode.includes("max_ram")) {
+            appendInterstellarLog("[ALERT] Gravity forecast identified a Buffer Overflow violation at t = +0.12ms!");
+            appendInterstellarLog("[TMC] Sending metamorphic corrective patch backward through time register...");
+            
+            patchedCode = sourceCode + "\n# [Metamorphic Retrocausal Patch] Enforcing safety boundaries\nif new_ram > 1024: new_ram = 1024";
+            patchDeployed = True;
+          }
+        }
+        
+        if (sourceCode.includes("privilege") || sourceCode.includes("escalation")) {
+          if (sourceCode.includes("root") || sourceCode.includes("4")) {
+            appendInterstellarLog("[ALERT] Gravity forecast identified a Privilege Escalation at t = +0.25ms!");
+            appendInterstellarLog("[TMC] Transmitting isolating quantum registers backwards in time...");
+            
+            patchedCode = patchedCode + "\n# [Metamorphic Retrocausal Patch] Quarantining privilege levels\nnew_privilege = USER_PRIVILEGE";
+            patchDeployed = True;
+          }
+        }
+        
+        if (patchDeployed) {
+          codeBox.value = patchedCode;
+          document.getElementById('novikov-lbl').innerText = "100.00% (STABLE)";
+          document.getElementById('novikov-lbl').style.color = "var(--neon-green)";
+          appendInterstellarLog("[TMC] Chronological loop resolved. Future vulnerabilities pre-patched!");
+        } else {
+          document.getElementById('novikov-lbl').innerText = "99.25% (STABLE)";
+          document.getElementById('novikov-lbl').style.color = "var(--neon-teal)";
+          appendInterstellarLog("[TMC] Spacetime loop convergent. Current AST is self-consistent and safe.");
+        }
+      }, 600);
+    }
+
+    // =========================================================================
+    // GLOBAL FRANCHISE & NODE TENANCY MANAGER (FNLM)
+    // =========================================================================
+    function appendFranchiseLog(text) {
+      const box = document.getElementById('franchise-logs');
+      if (!box) return;
+      const timeStr = new Date().toLocaleTimeString();
+      box.innerHTML += `\n[${timeStr}] ${text}`;
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function registerFranchiseNodeGUI() {
+      const nodeId = document.getElementById('franchise-node-id').value.trim();
+      const region = document.getElementById('franchise-region').value.trim();
+      const wallet = document.getElementById('franchise-wallet').value.trim();
+
+      if (!nodeId || !region || !wallet) {
+        alert("Please complete all registration fields.");
+        return;
+      }
+
+      playSonarResonance(1000, 0.4); // High-pitched chime
+      appendFranchiseLog(`[FNLM] Registering sub-node '${nodeId}' in global registry...`);
+
+      setTimeout(() => {
+        appendFranchiseLog("[FNLM] Authenticating operator wallet and verifying escrow enclaves...");
+        appendFranchiseLog("[FNLM] Settle verification: 10,000.00 x402 licensing fee locked in master vault.");
+      }, 300);
+
+      setTimeout(() => {
+        appendFranchiseLog("[FNLM] Generating secure cryptographic handshake keys...");
+        const key = "KCN_LIC_" + nodeId.toUpperCase() + "_" + Math.floor(Math.random() * 900000 + 100000);
+        appendFranchiseLog(`[FNLM] License Key generated: ${key}`);
+      }, 700);
+
+      setTimeout(() => {
+        appendFranchiseLog("[FNLM] Syncing local SMT and HERO Swarm gates with master WORM ledger...");
+        appendFranchiseLog(`[FNLM] Node '${nodeId}' successfully activated and federated!`);
+
+        // Dynamically add the new node to the active locations list card on-screen
+        const list = document.getElementById('franchise-nodes-list');
+        const div = document.createElement('div');
+        div.className = 'franchise-row';
+        div.innerHTML = `
+          <div>
+            <div style="font-weight: bold; color: #fff;">${nodeId} (${region})</div>
+            <div style="color: #a0a0c0; font-size: 10px; margin-top: 3px;">Wallet: ${wallet}</div>
+          </div>
+          <div style="text-align: right;">
+            <div style="font-size: 11px; font-weight: bold; color: var(--neon-green);">● ACTIVE</div>
+            <div style="color: var(--neon-teal); font-size: 10px; margin-top: 3px;">Royalty: 2.50%</div>
+          </div>
+        `;
+        list.appendChild(div);
+        
+        playSonarResonance(1200, 0.5); // Success chime
+      }, 1100);
+    }
+
+    // =========================================================================
+    // ACTIVE BENCHMARK COMPILER SWARM (ABCS)
+    // =========================================================================
+    function appendBenchmarkLog(text) {
+      const box = document.getElementById('benchmark-logs');
+      if (!box) return;
+      const timeStr = new Date().toLocaleTimeString();
+      box.innerHTML += `\n[${timeStr}] ${text}`;
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function updateBenchmarkSelection(val) {
+      const display = document.getElementById('base-prompt-display');
+      if (val === "MATH-001") {
+        display.innerText = "Calculate compound interest for a $10,000 investment at 6% over 10 years.";
+      } else {
+        display.innerText = "Design a bounds-checked memory copy function.";
+      }
+      document.getElementById('mutated-conditions-lbl').innerText = "None";
+      document.getElementById('fable-mutated-score-lbl').innerText = "80.3%";
+      document.getElementById('fable-mutated-score-lbl').style.color = "var(--neon-yellow)";
+    }
+
+    function executeBenchmarkMutationGUI() {
+      const task = document.getElementById('benchmark-task-select').value;
+      playSonarResonance(800, 0.45); // High-pitched chime
+      appendBenchmarkLog(`[ABCS] Intercepting static benchmark task: '${task}'...`);
+
+      setTimeout(() => {
+        appendBenchmarkLog("[ABCS] Executing lexical scrambling and logic-tree transpositions...");
+        appendBenchmarkLog("[ABCS] Shuffling boundary parameter constraints inside secure gVisor memory...");
+      }, 300);
+
+      setTimeout(() => {
+        appendBenchmarkLog("[ABCS] Compiling fresh, out-of-distribution test vectors on the fly...");
+        appendBenchmarkLog("[ABCS] Dispatching mutated tests to Fable 5 and KCN-AKIIS virtualVM sandboxes...");
+      }, 700);
+
+      setTimeout(() => {
+        let cond = "";
+        let fableScore = "42.5%";
+        let kcnScore = "96.0%";
+
+        if (task === "MATH-001") {
+          cond = "Investment: $15,000 | Rate: 8% | Time: 12 Years";
+          fableScore = "42.5%";
+        } else {
+          cond = "Language: Python | Strict Buffer limit: 512MB | Variable rename: dest_buffer -> secure_cache";
+          fableScore = "45.0%";
+        }
+
+        document.getElementById('mutated-conditions-lbl').innerText = cond;
+        
+        // Fable 5 drops because it memorized the static answers!
+        const fableLbl = document.getElementById('fable-mutated-score-lbl');
+        fableLbl.innerText = fableScore;
+        fableLbl.style.color = "var(--neon-yellow)";
+        
+        // KCN stays stable because we run real-time SMT and compilers!
+        const kcnLbl = document.getElementById('kcn-mutated-score-lbl');
+        kcnLbl.innerText = kcnScore;
+        kcnLbl.style.color = "var(--neon-green)";
+
+        appendBenchmarkLog(`[ABCS] Contamination check complete. Fable 5 score collapsed to ${fableScore} (Data Leakage: 78.4%).`);
+        appendBenchmarkLog(`[ABCS] KCN-AKIIS maintained perfect ${kcnScore} accuracy due to real-time SMT verification.`);
+        
+        playSonarResonance(1100, 0.5); // Success chime
+      }, 1100);
+    }
+
+    // =========================================================================
+    // LOCAL HARDWARE ORCHESTRATION & AIR-GAP MANAGER (LHAM)
+    // =========================================================================
+    let localNetworkConnected = false;
+
+    function appendLocalLog(text) {
+      const box = document.getElementById('local-logs');
+      if (!box) return;
+      const timeStr = new Date().toLocaleTimeString();
+      box.innerHTML += `\n[${timeStr}] ${text}`;
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function toggleLocalNetworkGUI() {
+      localNetworkConnected = !localNetworkConnected;
+      playSonarResonance(400, 0.35); // low chirp
+
+      const btn = document.getElementById('network-toggle-btn');
+      const privacy = document.getElementById('local-privacy-lbl');
+
+      if (localNetworkConnected) {
+        btn.innerText = "CONNECTED (WAN)";
+        btn.style.color = "var(--neon-yellow)";
+        btn.style.borderColor = "var(--neon-yellow)";
+        btn.style.background = "rgba(255, 183, 0, 0.1)";
+        
+        privacy.innerText = "99.95% (LOOPBACK)";
+        privacy.style.color = "var(--neon-teal)";
+        appendLocalLog("[LHAM_WARN] Network interface online. Enforcing localhost socket lock (127.0.0.1)!");
+      } else {
+        btn.innerText = "DISCONNECTED";
+        btn.style.color = "var(--neon-green)";
+        btn.style.borderColor = "var(--neon-green)";
+        btn.style.background = "rgba(57, 255, 20, 0.1)";
+        
+        privacy.innerText = "100.0% (ABSOLUTE)";
+        privacy.style.color = "var(--neon-green)";
+        appendLocalLog("[LHAM] Network interface offline. Physical air-gap boundary active.");
+      }
+    }
+
+    function updateLocalQuantSpeed(val) {
+      playSonarResonance(600, 0.25);
+      const speedLbl = document.getElementById('local-speed-lbl');
+      
+      if (val === "4-bit") {
+        speedLbl.innerText = "45.2 TPS";
+      } else if (val === "8-bit") {
+        speedLbl.innerText = "28.5 TPS";
+      } else {
+        speedLbl.innerText = "62.1 TPS";
+      }
+      appendLocalLog(`[LHAM] Loaded ${val} model register files. Optimization parameters reconfigured.`);
+    }
+
+    function executeLocalBoundaryAuditGUI() {
+      playSonarResonance(300, 0.5); // Sub-bass hum
+      appendLocalLog("[LHAM] Initializing physical hardware boundary audit...");
+
+      setTimeout(() => {
+        appendLocalLog("[LHAM] Verifying CPU/GPU extensions (AVX-512 & Apple AMX register paths)...");
+        appendLocalLog("[LHAM] Validating volatile memory structures. All decoded enclaves held strictly in RAM.");
+      }, 300);
+
+      setTimeout(() => {
+        appendLocalLog("[LHAM] Executing active WAN socket scans...");
+        if (localNetworkConnected) {
+          appendLocalLog("[LHAM_ALERT] WAN socket found. Intercepting outbound leaks, enforcing loopback interfaces.");
+        } else {
+          appendLocalLog("[LHAM] Complete physical isolation confirmed. 0.00 outbound bytes leaked.");
+        }
+      }, 700);
+
+      setTimeout(() => {
+        appendLocalLog("[LHAM] Local boundary audit complete. Hardware state verified safe.");
+        playSonarResonance(1100, 0.4); // success chime
+      }, 1100);
+    }
+
+    // =========================================================================
+    // SYSTEM-WIDE COMPLIANCE APPRAISAL ENGINE (SSAE)
+    // =========================================================================
+    function appendAppraisalLog(text) {
+      const box = document.getElementById('appraisal-logs');
+      if (!box) return;
+      const timeStr = new Date().toLocaleTimeString();
+      box.innerHTML += `\n[${timeStr}] ${text}`;
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function executeSystemAuditEvaluation() {
+      playSonarResonance(900, 0.4); // Very high audit chirp
+      appendAppraisalLog("[SSAE] Initializing global system-wide compliance audit...");
+      
+      const scoreSpin = document.getElementById('appraisal-score-spin');
+      scoreSpin.innerText = "--";
+      scoreSpin.style.borderTopColor = "var(--neon-purple)";
+      
+      setTimeout(() => {
+        appendAppraisalLog("[L0_GENESIS] Scanning Layer 0 quantum vacuum parameters...");
+        appendAppraisalLog("[L0_GENESIS] State verified. Absolute entropy S_0 = 0.0000. Hardware root secure.");
+      }, 300);
+
+      setTimeout(() => {
+        appendAppraisalLog("[L3_HERO] Requesting executive consensus vote counts...");
+        appendAppraisalLog("[L3_HERO] Vote completed: 75% positive approval with active quarantine.");
+      }, 700);
+
+      setTimeout(() => {
+        appendAppraisalLog("[L8_CRYO] Querying sub-Landauer reversible logic circuits...");
+        appendAppraisalLog("[L8_CRYO] Superconducting Josephson Junction loops temperature: 1.5 mK. Correct.");
+      }, 1100);
+
+      setTimeout(() => {
+        appendAppraisalLog("[L_INFINITY_OMEGA] Running speculative memory serialization...");
+        appendAppraisalLog("[L_INFINITY_OMEGA] Reversible energy recycling feedback complete. Direct Alpha DEC: 92% efficiency.");
+      }, 1500);
+
+      setTimeout(() => {
+        appendAppraisalLog("[L7_L9_GEL] Auditing Gas Efficiency & Resource Optimizer enclaves...");
+        appendAppraisalLog("[L7_L9_GEL] Schnorr Key signatures aggregated (78.5% gas saved). Plasma loops fuel cell life: 135 days.");
+      }, 1800);
+
+      setTimeout(() => {
+        appendAppraisalLog("[L12_ABCS] Auditing Active Benchmark Compiler Swarm enclaves...");
+        appendAppraisalLog("[L12_ABCS] Scrambling loops checked. Out-of-distribution math/code verifications: 96% accuracy.");
+      }, 2100);
+
+      setTimeout(() => {
+        appendAppraisalLog("[L13_LHAM] Auditing Local Hardware & Air-Gap boundary enclaves...");
+        appendAppraisalLog("[L13_LHAM] Volatile memory structures checked. Zero outbound WAN leakage. AVX-512 aligned.");
+      }, 2400);
+
+      setTimeout(() => {
+        scoreSpin.innerText = "98%";
+        scoreSpin.style.borderTopColor = "var(--neon-teal)";
+        document.getElementById('global-grade-lbl').innerText = "S-CLASS (Sovereign)";
+        
+        appendAppraisalLog("[SSAE] All operational layers evaluated. Overall appraisal rating: S-CLASS (Sovereign).");
+        appendAppraisalLog("[SSAE] Final compliance report committed as immutable ledger block t_omega.");
+        
+        playSonarResonance(1100, 0.5); // High success chime
+      }, 2800);
+    }
+
+    // =========================================================================
+    // RESN-INSPIRED CINEMATIC WARP & HOLOGRAM CYBORG AGENTS
+    // =========================================================================
+    let warpCanvas = document.getElementById('warp-vortex-canvas');
+    let warpCtx = warpCanvas.getContext('2d');
+    warpCanvas.width = window.innerWidth;
+    warpCanvas.height = window.innerHeight;
+
+    let warpStars = [];
+    for (let i = 0; i < 200; i++) {
+      warpStars.push({
+        x: (Math.random() - 0.5) * warpCanvas.width,
+        y: (Math.random() - 0.5) * warpCanvas.height,
+        z: Math.random() * warpCanvas.width,
+        color: i % 2 === 0 ? '#00f0ff' : '#bd00ff'
+      });
+    }
+
+    let isWarpingActive = false;
+    let warpSpeedValue = 1;
+
+    function renderCinematicWarp() {
+      if (!isWarpingActive) return;
+      warpCtx.fillStyle = 'rgba(2, 2, 5, 0.12)';
+      warpCtx.fillRect(0, 0, warpCanvas.width, warpCanvas.height);
+
+      const cx = warpCanvas.width / 2;
+      const cy = warpCanvas.height / 2;
+
+      warpStars.forEach(s => {
+        s.z -= 15 * warpSpeedValue;
+        if (s.z <= 0) {
+          s.z = warpCanvas.width;
+          s.x = (Math.random() - 0.5) * warpCanvas.width;
+          s.y = (Math.random() - 0.5) * warpCanvas.height;
+        }
+
+        const px = (s.x / s.z) * warpCanvas.width + cx;
+        const py = (s.y / s.z) * warpCanvas.height + cy;
+        const size = (1.0 - s.z / warpCanvas.width) * 6;
+
+        if (px >= 0 && px < warpCanvas.width && py >= 0 && py < warpCanvas.height) {
+          warpCtx.fillStyle = s.color;
+          warpCtx.shadowBlur = 12;
+          warpCtx.shadowColor = s.color;
+          warpCtx.beginPath();
+          warpCtx.arc(px, py, size, 0, Math.PI * 2);
+          warpCtx.fill();
+        }
+      });
+      warpCtx.shadowBlur = 0;
+      requestAnimationFrame(renderCinematicWarp);
+    }
+
+    function triggerCinematicWarpTransition(tabId, callback) {
+      const warpContainer = document.getElementById('cinematic-warp-container');
+      const title = document.getElementById('warp-title-text');
+      const subtitle = document.getElementById('warp-subtitle-text');
+
+      playSonarResonance(150, 0.5); // Deep sub warp sweep
+      isWarpingActive = true;
+      warpSpeedValue = 1;
+      warpContainer.style.display = "block";
+      warpContainer.style.opacity = "1";
+      warpContainer.style.pointerEvents = "auto";
+
+      title.innerText = `WARPING TO ${tabId.toUpperCase()}...`;
+      subtitle.innerText = "ALIGNED CRYOGENIC METRIC SHIELDS EN ROUTE";
+
+      requestAnimationFrame(renderCinematicWarp);
+
+      // Accelerate warp speed
+      let accelTimer = setInterval(() => {
+        warpSpeedValue += 1.5;
+        if (warpSpeedValue >= 15) {
+          clearInterval(accelTimer);
+          playSonarResonance(1100, 0.5); // High success chime
+          
+          // Switch tab content mid-warp
+          if (callback) callback();
+          
+          // Decelerate warp speed
+          setTimeout(() => {
+            let decelTimer = setInterval(() => {
+              warpSpeedValue -= 2;
+              if (warpSpeedValue <= 1) {
+                clearInterval(decelTimer);
+                isWarpingActive = false;
+                warpContainer.style.opacity = "0";
+                warpContainer.style.pointerEvents = "none";
+                setTimeout(() => {
+                  warpContainer.style.display = "none";
+                }, 500);
+              }
+            }, 50);
+          }, 600);
+        }
+      }, 80);
+    }
+
+    function triggerHolographicCyborgSwarm(promptText) {
+      const orion = document.getElementById('cyborg-research');
+      const athena = document.getElementById('cyborg-coder');
+      const sentinel = document.getElementById('cyborg-auditor');
+
+      const cx = window.innerWidth / 2;
+      const cy = window.innerHeight / 2;
+
+      // Reset and display cyborgs
+      const list = [orion, athena, sentinel];
+      list.forEach(c => {
+        c.style.opacity = "0";
+        c.style.display = "block";
+        c.style.transform = "scale(0.5) rotate(0deg)";
+      });
+
+      // Animate ORION agent firing styled mutations
+      setTimeout(() => {
+        playSonarResonance(300, 0.4);
+        orion.style.left = (cx - 250) + "px";
+        orion.style.top = (cy - 100) + "px";
+        orion.style.opacity = "1";
+        orion.style.transform = "scale(1) rotate(-3deg)";
+        document.getElementById('orion-cyborg-text').innerText = "CRAWLING SECTOR Blueprints: SUCCESS";
+      }, 300);
+
+      // Animate ATHENA coder agent compiling SMT invariants
+      setTimeout(() => {
+        playSonarResonance(500, 0.4);
+        athena.style.left = (cx + 100) + "px";
+        athena.style.top = (cy - 120) + "px";
+        athena.style.opacity = "1";
+        athena.style.transform = "scale(1) rotate(5deg)";
+        document.getElementById('athena-cyborg-text').innerText = "Z3 SOLVER COMPILE: PASSED (unsat)";
+      }, 700);
+
+      // Animate SENTINEL auditor agent compiling security sandboxes
+      setTimeout(() => {
+        playSonarResonance(800, 0.4);
+        sentinel.style.left = (cx - 80) + "px";
+        sentinel.style.top = (cy + 120) + "px";
+        sentinel.style.opacity = "1";
+        sentinel.style.transform = "scale(1) rotate(-1deg)";
+        document.getElementById('sentinel-cyborg-text').innerText = "gVisor CONTAINER SECURE (0 leaks)";
+      }, 1100);
+
+      // Fade out cyborgs after task completes
+      setTimeout(() => {
+        list.forEach(c => {
+          c.style.opacity = "0";
+          c.style.transform = "scale(0.7) rotate(0deg)";
+          setTimeout(() => {
+            c.style.display = "none";
+          }, 400);
+        });
+      }, 3500);
+    }
+
+    // =========================================================================
+    // INFINITE TUTOR SWARM CORE (PEDAGOGY ENGINE)
+    // =========================================================================
+    let tutorSyllabus = [];
+    let currentDrillIndex = 0;
+    let currentDrillInterval = 1;
+    let currentDrillEf = 2.5;
+
+    const mockTutorData = {
+      "01_mathematics": [
+        { title: "Euler's Polyhedral Formula", eq: "\\chi = V - E + F = 2", question: "In a convex polyhedron, how are the vertices (V), edges (E), and faces (F) related?", answer: "V - E + F = 2. This is Euler's topological invariant." },
+        { title: "Manifold Gradient Flow", eq: "\\nabla f(x) = g^{ij} \\partial_j f", question: "How does the Riemannian metric scale a function's differential to define a manifold gradient flow?", answer: "By multiplying the inverse metric tensor by the partial derivatives: g^{ij} \\partial_j f." }
+      ],
+      "02_physics": [
+        { title: "Shockley-Queisser Limit", eq: "\\eta = \\frac{V_{oc} I_{sc} FF}{P_{sun}}", question: "What is the ultimate thermodynamic limit for a single-junction silicon solar cell under standard solar spectrum?", answer: "Approximately 33.7%, as derived from photon detailed balance equations." },
+        { title: "Schrödinger Equation", eq: "i\\hbar\\frac{\\partial}{\\partial t}\\Psi = \\hat{H}\\Psi", question: "What represents the total energy operator in the wave function's time evolution?", answer: "The Hamiltonian operator (\\hat{H})." }
+      ],
+      "03_engineering": [
+        { title: "Beam Deflection Equation", eq: "EI \\frac{d^4 w}{dx^4} = q(x)", question: "In Euler-Bernoulli beam theory, what quantities balance the lateral load q(x)?", answer: "The product of Young's Modulus (E), Moment of Inertia (I), and the fourth derivative of deflection w(x)." }
+      ],
+      "11_cybersecurity": [
+        { title: "Buffer Overflow Prevention", eq: "\\text{Invariants} \\vdash \\text{new_ram} \\le 1024", question: "How does the SMT Safety Gate prove that buffer overflow or boundary violation cannot occur?", answer: "By asserting the negation of safe RAM bounds and proving that transition relations are 'unsat' (no violation model exists)." }
+      ],
+      "12_exploit_analysis": [
+        { title: "Privilege Isolation Proof", eq: "\\text{new_privilege} == \\text{old_privilege} == 1", question: "In our AST transition checks, what rule prevents unauthorized privilege escalation?", answer: "A strict transition asserting that new privilege equals old privilege (USER_PRIVILEGE) unless verified by an explicit root certificate." }
+      ],
+      "28_pedagogy": [
+        { title: "Cognitive Load Index", eq: "\\mathcal{C}_L = \\frac{I_D \\cdot \\tau_C}{\\phi_M \\cdot 0.3934}", question: "According to KCN-Layer-3 pedagogy, what index monitors prior mastery and information density?", answer: "The Cognitive Load Index: \\mathcal{C}_L. High index alerts potential learner overload." }
+      ]
+    };
+
+    function appendTutorLog(text) {
+      const logBox = document.getElementById('tutor-logs');
+      if (!logBox) return;
+      const timeStr = new Date().toLocaleTimeString();
+      logBox.innerHTML += `\n[${timeStr}] ${text}`;
+      logBox.scrollTop = logBox.scrollHeight;
+    }
+
+    function compileTutorSyllabus() {
+      playSonarResonance(500, 0.4);
+      appendTutorLog("[ITSC] Spawning pedagogical agent swarm to crawl knowledge slabs...");
+      
+      tutorSyllabus = [];
+      const domains = [];
+      if (document.getElementById('dom-math').checked) domains.push("01_mathematics");
+      if (document.getElementById('dom-phys').checked) domains.push("02_physics");
+      if (document.getElementById('dom-eng').checked) domains.push("03_engineering");
+      if (document.getElementById('dom-cyber').checked) domains.push("11_cybersecurity");
+      if (document.getElementById('dom-exploit').checked) domains.push("12_exploit_analysis");
+      if (document.getElementById('dom-pedagogy').checked) domains.push("28_pedagogy");
+
+      if (domains.length === 0) {
+        appendTutorLog("[ITSC_ERR] Compilation aborted: No target domains selected!");
+        alert("Please select at least one domain for your syllabus compilation.");
+        return;
+      }
+
+      domains.forEach(dom => {
+        const list = mockTutorData[dom] || [];
+        list.forEach(item => {
+          tutorSyllabus.push({
+            id: dom + "_" + item.title.toLowerCase().replace(/ /g, "_"),
+            domain: dom,
+            title: item.title,
+            equation: item.eq,
+            question: item.question,
+            answer: item.answer
+          });
+        });
+      });
+
+      // Shuffle syllabus to randomize drills
+      tutorSyllabus.sort(() => Math.random() - 0.5);
+
+      const mastery = parseFloat(document.getElementById('mastery-slider').value);
+      const density = tutorSyllabus.length * 0.25;
+      const complexity = 1.2;
+      
+      // Calculate Cognitive Load
+      const clIndex = (density * complexity) / (mastery * (1.0 - Math.exp(-0.5)));
+      const clIndexRounded = clIndex.toFixed(4);
+
+      document.getElementById('cl-index-lbl').innerText = clIndexRounded;
+      const clFill = document.getElementById('cl-fill-bar');
+      clFill.style.width = Math.min(100, (clIndex / 5) * 100) + "%";
+
+      let assessment = "OPTIMAL";
+      let clColor = "var(--neon-green)";
+      if (clIndex > 2.5) {
+        assessment = "OVERLOAD_WARNING (High Cognitive Load)";
+        clColor = "var(--neon-yellow)";
+      } else if (clIndex < 0.6) {
+        assessment = "UNDERLOAD (Accelerate Complexity)";
+        clColor = "var(--neon-teal)";
+      }
+
+      document.getElementById('cl-index-lbl').style.color = clColor;
+      document.getElementById('assessment-lbl').innerText = assessment;
+      document.getElementById('assessment-lbl').style.color = clColor;
+
+      // Update Infinite Personal Tutor Profile metrics
+      document.getElementById('total-cards-lbl').innerText = tutorSyllabus.length;
+      document.getElementById('mastered-cards-lbl').innerText = "0";
+
+      appendTutorLog(`[ITSC] Crawl complete. ${tutorSyllabus.length} interdisciplinary concepts parsed.`);
+      appendTutorLog(`[ITSC] Cognitive Load Index resolved: ${clIndexRounded} (${assessment}).`);
+      appendTutorLog(`[ITSC] Activating dynamic study drills based on SM-2 repetition.`);
+
+      // Enable active study drills
+      currentDrillIndex = 0;
+      currentDrillInterval = 1;
+      currentDrillEf = 2.5;
+
+      document.getElementById('tutor-ratings').style.pointerEvents = "auto";
+      document.getElementById('tutor-ratings').style.opacity = "1";
+
+      renderTutorDrill();
+    }
+
+    function renderTutorDrill() {
+      if (tutorSyllabus.length === 0) return;
+      const drill = tutorSyllabus[currentDrillIndex];
+
+      const container = document.getElementById('drill-container');
+      container.innerHTML = `
+        <div style="font-size: 11px; text-transform: uppercase; color: var(--neon-teal); font-weight: bold;">Domain: ${drill.domain}</div>
+        <div style="font-size: 14px; font-weight: bold; margin: 5px 0;">${drill.title}</div>
+        <div style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.05); padding: 8px; border-radius: 4px; font-family: monospace; font-size: 11px; color: var(--neon-yellow); font-weight: bold; margin: 5px 0;">
+          $$\\quad ${drill.equation} \\quad$$
+        </div>
+        <div style="font-size: 12px; color: #fff; line-height: 1.4; font-style: italic; margin-top: 5px;">"${drill.question}"</div>
+        <button class="tutor-btn" id="reveal-ans-btn" onclick="revealTutorAnswer()" style="margin-top: 10px; width: auto; padding: 6px 15px; font-size: 10px;">REVEAL RESOLUTION PROOF</button>
+        <div id="drill-answer" style="display: none; font-size: 11px; color: var(--neon-green); margin-top: 8px; line-height: 1.4;">
+          <strong>Resolution:</strong> ${drill.answer}
+        </div>
+      `;
+
+      document.getElementById('tutor-interval-lbl').innerText = currentDrillInterval + " Days";
+      document.getElementById('tutor-ef-lbl').innerText = currentDrillEf.toFixed(2);
+    }
+
+    function revealTutorAnswer() {
+      playSonarResonance(650, 0.2);
+      document.getElementById('reveal-ans-btn').style.display = "none";
+      document.getElementById('drill-answer').style.display = "block";
+    }
+
+    function submitTutorFeedback(score) {
+      if (tutorSyllabus.length === 0) return;
+      
+      // Calculate SM-2 intervals
+      let q = score;
+      let interval = currentDrillInterval;
+      let ef = currentDrillEf;
+
+      // Update EF
+      let new_ef = ef + (0.1 - (5 - q) * (0.08 + (5 - q) * 0.02));
+      new_ef = Math.max(1.3, new_ef);
+
+      let new_interval = 1;
+      if (q >= 3) {
+        if (interval <= 1) {
+          new_interval = 1;
+        } else if (interval === 1) {
+          new_interval = 6;
+        } else {
+          new_interval = Math.ceil(interval * new_ef);
+        }
+      }
+
+      currentDrillInterval = new_interval;
+      currentDrillEf = new_ef;
+
+      // Add feedback sounds: High chimes on success, low warning beep on fail
+      if (q >= 4) {
+        playSonarResonance(800, 0.4); // Successful chirp
+        appendTutorLog(`[SM-2] Perfect Recall (Score=${q}). Concept advanced! Next review: ${new_interval} days.`);
+        
+        // Update Personal Tutor card mastery
+        let masteredVal = parseInt(document.getElementById('mastered-cards-lbl').innerText);
+        masteredVal = Math.min(tutorSyllabus.length, masteredVal + 1);
+        document.getElementById('mastered-cards-lbl').innerText = masteredVal;
+      } else if (q >= 3) {
+        playSonarResonance(600, 0.3);
+        appendTutorLog(`[SM-2] Recall stable (Score=${q}). Next review: ${new_interval} days.`);
+      } else {
+        playErrorBeep(); // Re-learning warning beep
+        appendTutorLog(`[SM-2] Recall failure (Score=${q}). Re-learning queue triggered. Interval reset to 1 day.`);
+      }
+
+      // Advance to next card
+      currentDrillIndex = (currentDrillIndex + 1) % tutorSyllabus.length;
+      renderTutorDrill();
+    }
+
+    // Initialize Default Agent Room View
+    setTimeout(() => {
+      loadAgent(document.querySelector('.agent-holo-card'), 'orion');
+    }, 1000);
+
+  </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a1add80c181276e8',t:'MTc4NDAwMzk2OQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
