@@ -87,7 +87,7 @@ class SecretsManager:
             algorithm=hashes.SHA256(),
             length=32,
             salt=salt,
-            iterations=600000,
+            iterations=1000000,
         )
         derived_key = kdf.derive(master_key.encode("utf-8"))
         fernet_key = base64.urlsafe_b64encode(derived_key)
