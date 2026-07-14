@@ -180,6 +180,13 @@ def github_login(request: Request):
         raise HTTPException(status_code=500, detail="GITHUB_OAUTH_CLIENT_ID not configured")
 
     state = str(uuid.uuid4())
+    params = {
+        "client_id": client_id,
+        "scope": "repo user",
+        "state": state,
+    }
+    url = "https://github.com/login/oauth/authorize"
+    redirect = url + "?" + "&".join([f"{k}={v}" for k, v in params.items()])
     # store state in server-side session if available, else cookie session
     if SESSION_STORE:
         sid = request.cookies.get('session_id') or SESSION_STORE.new_session()
@@ -191,13 +198,6 @@ def github_login(request: Request):
         return response
     else:
         request.session["oauth_state"] = state
-    params = {
-        "client_id": client_id,
-        "scope": "repo user",
-        "state": state,
-    }
-    url = "https://github.com/login/oauth/authorize"
-    redirect = url + "?" + "&".join([f"{k}={v}" for k, v in params.items()])
     return RedirectResponse(redirect)
 
 
