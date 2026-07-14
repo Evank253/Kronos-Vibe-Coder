@@ -10,18 +10,12 @@ def clone_repository(repo_url: str):
     destination = workspace / repo_name
 
     if destination.exists():
-        return {
-            "status": "already_exists",
-            "path": str(destination)
-        }
+        return {"status": "already_exists", "path": str(destination)}
 
-    subprocess.run(
-        ["git", "clone", repo_url, str(destination)],
-        check=True
-    )
+    subprocess.run(["git", "clone", repo_url, str(destination)], check=True)
 
     return {
         "status": "cloned",
         "repository": repo_name,
-        "path": str(destination)
+        "path": str(destination),
     }

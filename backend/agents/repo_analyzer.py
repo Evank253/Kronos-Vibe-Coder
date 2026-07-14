@@ -10,5 +10,5 @@ def analyze_repo(path):
     return {
         "status": "analysis complete",
         "files_found": len(files),
-        "files": files[:100]
+        "files": files[:100],
     }

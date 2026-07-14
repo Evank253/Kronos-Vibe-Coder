@@ -1,5 +1,3 @@
-from pathlib import Path
-
 from backend.agents.scan_pipeline import scan_repository
 
 

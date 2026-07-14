@@ -4,38 +4,98 @@
     <meta charset="utf-8" />
     <title>Kronos Vibe Coder</title>
     <style>
-      body { font-family: Arial, sans-serif; margin: 24px; }
-      .panel { max-width: 800px; margin: auto; }
-      textarea { width: 100%; height: 120px; }
-      input[type=text] { width: 80%; }
-      button { padding: 8px 12px; }
-      .job { border: 1px solid #ddd; padding: 8px; margin-top: 8px; }
+      * { box-sizing: border-box; }
+      body { font-family: Arial, sans-serif; margin: 0; background: #0d1117; color: #c9d1d9; }
+      .panel { max-width: 900px; margin: auto; padding: 24px; }
+      h1 { color: #58a6ff; }
+      h2 { color: #79c0ff; border-bottom: 1px solid #30363d; padding-bottom: 6px; }
+      textarea { width: 100%; height: 120px; background: #161b22; color: #c9d1d9; border: 1px solid #30363d; border-radius: 6px; padding: 8px; }
+      input[type=text] { width: 70%; background: #161b22; color: #c9d1d9; border: 1px solid #30363d; border-radius: 6px; padding: 6px 8px; }
+      input[type=file] { color: #c9d1d9; }
+      button { padding: 8px 14px; background: #238636; color: #fff; border: none; border-radius: 6px; cursor: pointer; margin: 2px; }
+      button:hover { background: #2ea043; }
+      button.secondary { background: #21262d; border: 1px solid #30363d; }
+      button.secondary:hover { background: #30363d; }
+      .job, .chat-result { border: 1px solid #30363d; border-radius: 6px; padding: 12px; margin-top: 10px; background: #161b22; }
+      .status { font-family: monospace; white-space: pre-wrap; font-size: 12px; max-height: 300px; overflow: auto; }
+      .suggestions { font-size: 14px; line-height: 1.6; }
+      .suggestions pre { background: #0d1117; padding: 10px; border-radius: 4px; overflow-x: auto; }
+      label { display: block; margin: 8px 0 4px; font-size: 13px; color: #8b949e; }
+      .tabs { display: flex; gap: 4px; margin-bottom: 16px; }
+      .tab { padding: 8px 16px; cursor: pointer; border-radius: 6px 6px 0 0; border: 1px solid #30363d; background: #21262d; }
+      .tab.active { background: #161b22; border-bottom-color: #161b22; color: #58a6ff; }
+      .tab-content { display: none; }
+      .tab-content.active { display: block; }
+      .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; }
+      .badge-ok { background: #1a7f37; }
+      .badge-fail { background: #b62324; }
+      .badge-warn { background: #9e6a03; }
     </style>
   </head>
   <body>
     <div class="panel">
-      <h1>Kronos Vibe Coder</h1>
+      <h1>⚡ Kronos Vibe Coder</h1>
+      <p style="color:#8b949e">AI-powered code analysis, error fixing, and deployment assistant.</p>
 
       <div>
-        <button id="loginBtn">Sign in with GitHub</button>
-        <span id="whoami" style="margin-left:12px"></span>
+        <button id="loginBtn" class="secondary">Sign in with GitHub</button>
+        <span id="whoami" style="margin-left:12px; font-size:13px"></span>
       </div>
 
-      <h3>Submit repository (https://github.com/owner/repo)</h3>
-      <input id="repoUrl" type="text" placeholder="https://github.com/owner/repo" />
-      <button id="submitBtn">Submit</button>
+      <div class="tabs" style="margin-top:24px">
+        <div class="tab active" data-tab="chatbot">🤖 AI Chatbot</div>
+        <div class="tab" data-tab="submit">📦 Submit Repo</div>
+        <div class="tab" data-tab="upload">📂 Upload Files</div>
+      </div>
 
-      <h3>Or upload files / paste code</h3>
-      <input id="fileInput" type="file" multiple />
-      <div style="margin-top:8px">
+      <!-- ── AI Chatbot Tab ──────────────────────────────────────────── -->
+      <div id="tab-chatbot" class="tab-content active">
+        <h2>AI Code-Fix Chatbot</h2>
+        <p style="font-size:13px;color:#8b949e">
+          Enter a local path or git URL. The assistant will lint and test the code,
+          summarize all errors, and (if AI_API_KEY is set) suggest targeted fixes.
+        </p>
+
+        <label>Repository URL or local path</label>
+        <input id="chatRepoInput" type="text" placeholder="https://github.com/owner/repo  or  /path/to/project" style="width:80%" />
+        <button id="chatAnalyzeBtn">Analyze</button>
+
+        <div id="chatResults"></div>
+      </div>
+
+      <!-- ── Submit Repo Tab ────────────────────────────────────────── -->
+      <div id="tab-submit" class="tab-content">
+        <h2>Submit Repository for Full Scan</h2>
+        <label>Repository URL</label>
+        <input id="repoUrl" type="text" placeholder="https://github.com/owner/repo" />
+        <button id="submitBtn">Submit</button>
+        <div id="jobs"></div>
+      </div>
+
+      <!-- ── Upload Files Tab ───────────────────────────────────────── -->
+      <div id="tab-upload" class="tab-content">
+        <h2>Upload Files / Paste Code</h2>
+        <label>Select files</label>
+        <input id="fileInput" type="file" multiple />
+        <label>Or paste code</label>
         <textarea id="chatInput" placeholder="Paste code or notes here..."></textarea>
+        <button id="uploadBtn">Upload &amp; Scan</button>
+        <div id="uploadJobs"></div>
       </div>
-      <button id="uploadBtn">Upload / Scan</button>
-
-      <div id="jobs"></div>
     </div>
 
     <script>
+      // ── tab switching ───────────────────────────────────────────────────────
+      document.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+          document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+          tab.classList.add('active');
+          document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+        });
+      });
+
+      // ── auth ────────────────────────────────────────────────────────────────
       let CSRF_TOKEN = null;
       async function refreshWhoami(){
         try{
@@ -43,63 +103,161 @@
           const j = await r.json();
           CSRF_TOKEN = j.csrf_token || CSRF_TOKEN;
           if(j.authenticated){
-            document.getElementById('whoami').innerText = 'Signed in: ' + (j.login || j.name || j.avatar_url || '');
+            document.getElementById('whoami').innerText = '✓ ' + (j.login || j.name || '');
             document.getElementById('loginBtn').innerText = 'Sign out';
-            document.getElementById('loginBtn').onclick = function(){
-              // clear session by calling a small endpoint (reload to pick up session state)
+            document.getElementById('loginBtn').onclick = () =>
               fetch('/github/logout', {method:'POST'}).then(()=>location.reload());
-            }
           } else {
             document.getElementById('whoami').innerText = '';
             document.getElementById('loginBtn').innerText = 'Sign in with GitHub';
-            document.getElementById('loginBtn').onclick = function(){ window.location.href = '/github/login'; }
+            document.getElementById('loginBtn').onclick = () => window.location.href = '/github/login';
           }
-        }catch(e){ console.warn(e) }
+        }catch(e){ console.warn(e); }
       }
       refreshWhoami();
 
+      // ── markdown-ish renderer (basic) ───────────────────────────────────────
+      function renderMd(text){
+        if(!text) return '';
+        return text
+          .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+          .replace(/```[\w]*\n([\s\S]*?)```/g, (_,c)=>`<pre>${c}</pre>`)
+          .replace(/`([^`]+)`/g,'<code>$1</code>')
+          .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+          .replace(/\*(.+?)\*/g,'<em>$1</em>')
+          .replace(/^### (.+)$/gm,'<h4>$1</h4>')
+          .replace(/^## (.+)$/gm,'<h3>$1</h3>')
+          .replace(/^# (.+)$/gm,'<h2>$1</h2>')
+          .replace(/^[-*] (.+)$/gm,'<li>$1</li>')
+          .replace(/\n/g,'<br>');
+      }
 
-      document.getElementById('submitBtn').onclick = async function(){
-        const url = document.getElementById('repoUrl').value;
-        if(!url) return alert('Enter repo URL');
+      // ── AI chatbot ──────────────────────────────────────────────────────────
+      document.getElementById('chatAnalyzeBtn').onclick = async function(){
+        const input = document.getElementById('chatRepoInput').value.trim();
+        if(!input) return alert('Enter a repo URL or local path');
 
-        const headers = {'Content-Type':'application/json'};
-        if(CSRF_TOKEN) headers['X-CSRF-Token'] = CSRF_TOKEN;
-        const resp = await fetch('/submit_project', { method: 'POST', headers, body: JSON.stringify({url}) });
-        const data = await resp.json();
+        const btn = this;
+        btn.disabled = true;
+        btn.innerText = 'Analyzing…';
+
+        const container = document.getElementById('chatResults');
+        const card = document.createElement('div');
+        card.className = 'chat-result';
+        card.innerHTML = '<em>Running checks…</em>';
+        container.prepend(card);
+
+        try{
+          // Step 1: analyze
+          const headers = {'Content-Type':'application/json'};
+          if(CSRF_TOKEN) headers['X-CSRF-Token'] = CSRF_TOKEN;
+
+          const isUrl = input.startsWith('http');
+          let analysisData;
+
+          if(isUrl){
+            // clone-then-analyze via scan_repo endpoint
+            const r1 = await fetch('/scan_repo', {method:'POST', headers, body: JSON.stringify({url: input})});
+            const scan = await r1.json();
+            // build a synthetic analysis for suggest-fixes
+            analysisData = {
+              path: input,
+              summary: scan.status === 'complete' ? 'Scan complete.' : JSON.stringify(scan).slice(0,200),
+              lint: {count: 0, issues: []},
+              tests: {}
+            };
+            card.innerHTML = `<b>Scan complete</b><div class="status">${JSON.stringify(scan, null, 2)}</div>`;
+          } else {
+            const r1 = await fetch('/chatbot/analyze', {method:'POST', headers, body: JSON.stringify({path: input})});
+            analysisData = await r1.json();
+
+            const lintCount = analysisData.lint?.count ?? 0;
+            const testsPassed = analysisData.tests?.passed;
+            const lintBadge = lintCount === 0
+              ? `<span class="badge badge-ok">✓ lint clean</span>`
+              : `<span class="badge badge-fail">✗ ${lintCount} lint issue(s)</span>`;
+            const testBadge = testsPassed === undefined ? ''
+              : testsPassed
+                ? `<span class="badge badge-ok">✓ tests pass</span>`
+                : `<span class="badge badge-fail">✗ tests failed</span>`;
+
+            card.innerHTML = `
+              <b>${input}</b> ${lintBadge} ${testBadge}
+              <p style="font-size:13px;color:#8b949e">${analysisData.summary || ''}</p>
+              <button class="fixBtn" style="margin-top:6px">💡 Get Fix Suggestions</button>
+              <div class="fixArea"></div>
+            `;
+          }
+
+          // Step 2: fix suggestions (lazy, triggered by button)
+          const fixBtn = card.querySelector('.fixBtn');
+          if(fixBtn){
+            fixBtn.onclick = async function(){
+              fixBtn.disabled = true;
+              fixBtn.innerText = 'Asking AI…';
+              const r2 = await fetch('/suggest-fixes', {method:'POST', headers, body: JSON.stringify(analysisData)});
+              const fixes = await r2.json();
+              const area = card.querySelector('.fixArea');
+              area.innerHTML = `<div class="suggestions">${renderMd(fixes.suggestions || fixes.error || JSON.stringify(fixes))}</div>`;
+              fixBtn.remove();
+            };
+          }
+
+        }catch(e){
+          card.innerHTML = `<span style="color:#f85149">Error: ${e.message}</span>`;
+        }finally{
+          btn.disabled = false;
+          btn.innerText = 'Analyze';
+        }
+      };
+
+      // ── submit repo ─────────────────────────────────────────────────────────
+      function makeJobCard(jobId, container){
         const jobDiv = document.createElement('div');
         jobDiv.className = 'job';
-        jobDiv.id = 'job-' + data.job_id;
-        jobDiv.innerHTML = `<b>Job:</b> ${data.job_id} <div class="status">queued</div> <button class="statusBtn">Refresh</button> <button class="deployBtn">Deploy (create branch & PR)</button>`;
-        document.getElementById('jobs').prepend(jobDiv);
+        jobDiv.id = 'job-' + jobId;
+        jobDiv.innerHTML = `<b>Job:</b> ${jobId}
+          <div class="status">queued</div>
+          <button class="statusBtn secondary">Refresh</button>
+          <button class="deployBtn">Deploy (branch + PR)</button>`;
+        container.prepend(jobDiv);
 
-        jobDiv.querySelector('.statusBtn').onclick = async function(){
-          const res = await fetch('/job_status/' + data.job_id);
-          const j = await res.json();
+        jobDiv.querySelector('.statusBtn').onclick = async () => {
+          const j = await (await fetch('/job_status/' + jobId)).json();
           jobDiv.querySelector('.status').innerText = JSON.stringify(j, null, 2);
-        }
+        };
 
-        // auto-refresh every 5 seconds
-        const iv = setInterval(async ()=>{
+        const iv = setInterval(async () => {
           try{
-            const res = await fetch('/job_status/' + data.job_id);
+            const res = await fetch('/job_status/' + jobId);
             if(!res.ok) return;
             const j = await res.json();
             jobDiv.querySelector('.status').innerText = JSON.stringify(j, null, 2);
-            if(j.status && (j.status==='completed' || j.status==='failed')) clearInterval(iv);
-          }catch(e){ console.warn(e) }
+            if(j.status === 'completed' || j.status === 'failed') clearInterval(iv);
+          }catch(e){ console.warn(e); }
         }, 5000);
 
-        jobDiv.querySelector('.deployBtn').onclick = async function(){
-          const repo = prompt('Enter repository full name (owner/repo) to push changes to', url.replace('https://github.com/',''));
+        jobDiv.querySelector('.deployBtn').onclick = async () => {
+          const repo = prompt('Enter repository full name (owner/repo) to push changes to');
           if(!repo) return;
           const headers = {'Content-Type':'application/json'};
           if(CSRF_TOKEN) headers['X-CSRF-Token'] = CSRF_TOKEN;
-          const res = await fetch('/deploy_confirm', {method:'POST', headers, body: JSON.stringify({job_id: data.job_id, repo})});
+          const res = await fetch('/deploy_confirm', {method:'POST', headers, body: JSON.stringify({job_id: jobId, repo})});
           const r = await res.json();
-          if(res.ok) alert('Deployed: ' + JSON.stringify(r.pr)); else alert('Error: ' + JSON.stringify(r));
-        }
+          alert(res.ok ? 'Deployed: ' + JSON.stringify(r.pr) : 'Error: ' + JSON.stringify(r));
+        };
+
+        return jobDiv;
       }
+
+      document.getElementById('submitBtn').onclick = async function(){
+        const url = document.getElementById('repoUrl').value.trim();
+        if(!url) return alert('Enter repo URL');
+        const headers = {'Content-Type':'application/json'};
+        if(CSRF_TOKEN) headers['X-CSRF-Token'] = CSRF_TOKEN;
+        const data = await (await fetch('/submit_project', {method:'POST', headers, body: JSON.stringify({url})})).json();
+        makeJobCard(data.job_id, document.getElementById('jobs'));
+      };
 
       document.getElementById('uploadBtn').onclick = async function(){
         const files = document.getElementById('fileInput').files;
@@ -108,33 +266,12 @@
         const fd = new FormData();
         for(let i=0;i<files.length;i++) fd.append('files', files[i]);
         if(text) fd.append('text', text);
-
         const headers = {};
         if(CSRF_TOKEN) headers['X-CSRF-Token'] = CSRF_TOKEN;
-        const resp = await fetch('/upload_files', {method:'POST', headers, body: fd});
-        const data = await resp.json();
-        const jobDiv = document.createElement('div');
-        jobDiv.className = 'job';
-        jobDiv.id = 'job-' + data.job_id;
-        jobDiv.innerHTML = `<b>Job:</b> ${data.job_id} <div class="status">queued</div> <button class="statusBtn">Refresh</button> <button class="deployBtn">Deploy (create branch & PR)</button>`;
-        document.getElementById('jobs').prepend(jobDiv);
-
-        jobDiv.querySelector('.statusBtn').onclick = async function(){
-          const res = await fetch('/job_status/' + data.job_id);
-          const j = await res.json();
-          jobDiv.querySelector('.status').innerText = JSON.stringify(j, null, 2);
-        }
-
-        jobDiv.querySelector('.deployBtn').onclick = async function(){
-          const repo = prompt('Enter repository full name (owner/repo) to push changes to', '');
-          if(!repo) return;
-          const headers = {'Content-Type':'application/json'};
-          if(CSRF_TOKEN) headers['X-CSRF-Token'] = CSRF_TOKEN;
-          const res = await fetch('/deploy_confirm', {method:'POST', headers, body: JSON.stringify({job_id: data.job_id, repo})});
-          const r = await res.json();
-          if(res.ok) alert('Deployed: ' + JSON.stringify(r.pr)); else alert('Error: ' + JSON.stringify(r));
-        }
-      }
+        const data = await (await fetch('/upload_files', {method:'POST', headers, body: fd})).json();
+        makeJobCard(data.job_id, document.getElementById('uploadJobs'));
+      };
     </script>
   </body>
 </html>
+

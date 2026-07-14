@@ -8,14 +8,14 @@ try:
 except Exception:
     redis = None
 
-REDIS_URL = os.getenv('REDIS_URL')
+REDIS_URL = os.getenv("REDIS_URL")
 
 
 class RedisSessionStore:
     def __init__(self, url: Optional[str] = None):
         if redis is None:
-            raise RuntimeError('redis package not installed')
-        self.url = url or REDIS_URL or 'redis://localhost:6379/0'
+            raise RuntimeError("redis package not installed")
+        self.url = url or REDIS_URL or "redis://localhost:6379/0"
         self.client = redis.from_url(self.url)
 
     def get(self, session_id: str) -> Dict[str, Any]:

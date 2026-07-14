@@ -8,7 +8,4 @@ def security_scan(path="."):
     if (path / ".env").exists():
         findings.append("Environment file detected. Check secrets.")
 
-    return {
-        "security_findings": findings,
-        "status": "scanned"
-    }
+    return {"security_findings": findings, "status": "scanned"}

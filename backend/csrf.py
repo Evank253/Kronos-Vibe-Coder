@@ -16,7 +16,9 @@ class CSRFMiddleware(BaseHTTPMiddleware):
         token = session.get("csrf_token")
         header = request.headers.get("x-csrf-token")
         if not token or not header or header != token:
-            return JSONResponse({"error": "CSRF token missing or invalid"}, status_code=403)
+            return JSONResponse(
+                {"error": "CSRF token missing or invalid"}, status_code=403
+            )
 
         return await call_next(request)
 

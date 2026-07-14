@@ -18,12 +18,14 @@ def scan_repository(repo_url: str):
     security = security_scan(path)
     ai_review = review_codebase({"analysis": analysis})
 
-    return generate_report({
-        "repository": repo,
-        "analysis": analysis,
-        "debug": debug_result,
-        "tests": tests,
-        "deployment": deployment,
-        "security": security,
-        "ai_review": ai_review,
-    })
+    return generate_report(
+        {
+            "repository": repo,
+            "analysis": analysis,
+            "debug": debug_result,
+            "tests": tests,
+            "deployment": deployment,
+            "security": security,
+            "ai_review": ai_review,
+        }
+    )
