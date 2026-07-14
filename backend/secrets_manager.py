@@ -79,6 +79,7 @@ class SecretsManager:
         fd = os.open(self.vault_path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
         with os.fdopen(fd, "wb") as vault_file:
             vault_file.write(vault_data)
+        os.chmod(self.vault_path, 0o600)
         self._cache = dict(secrets)
 
     @staticmethod
@@ -87,7 +88,7 @@ class SecretsManager:
             algorithm=hashes.SHA256(),
             length=32,
             salt=salt,
-            iterations=390000,
+            iterations=600000,
         )
         derived_key = kdf.derive(master_key.encode("utf-8"))
         fernet_key = base64.urlsafe_b64encode(derived_key)

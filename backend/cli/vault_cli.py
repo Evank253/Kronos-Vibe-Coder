@@ -22,7 +22,9 @@ def cmd_retrieve(args):
     manager = _get_manager(args)
     value = manager.get_secret(args.key)
     if value is None:
-        raise SystemExit(f"Secret not found in vault or environment: {args.key}")
+        raise SystemExit(
+            f"Secret not found: {args.key}. Check vault (if VAULT_MASTER_KEY is set) or environment variables."
+        )
     print(f"Secret found: {args.key} (length={len(value)})")
 
 
