@@ -33,6 +33,15 @@
     <script>
       const scene = new window.VibeScene(document.getElementById('scene'));
       let activeTaskId = new URLSearchParams(location.search).get('task_id');
+      let csrfToken = null;
+
+      async function ensureCsrfToken(){
+        if(csrfToken) return csrfToken;
+        const response = await fetch('/whoami');
+        const payload = await response.json();
+        csrfToken = payload.csrf_token;
+        return csrfToken;
+      }
 
       function renderSnapshot(snapshot){
         document.getElementById('issuesRemaining').innerText = snapshot.summary?.issues_remaining ?? 0;
@@ -66,9 +75,10 @@
       }
 
       document.getElementById('startScan').onclick = async function(){
+        const token = await ensureCsrfToken();
         const response = await fetch('/vibe/scan-and-fix', {
           method: 'POST',
-          headers: {'Content-Type': 'application/json'},
+          headers: {'Content-Type': 'application/json', 'X-CSRF-Token': token},
           body: JSON.stringify({path: '.'})
         });
         const payload = await response.json();
@@ -77,9 +87,10 @@
 
       document.getElementById('deployBtn').onclick = async function(){
         if(!activeTaskId) return alert('Start a task first');
+        const token = await ensureCsrfToken();
         const response = await fetch('/vibe/merge-results', {
           method: 'POST',
-          headers: {'Content-Type': 'application/json'},
+          headers: {'Content-Type': 'application/json', 'X-CSRF-Token': token},
           body: JSON.stringify({task_id: activeTaskId, write_files: false})
         });
         const payload = await response.json();

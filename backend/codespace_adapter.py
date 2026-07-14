@@ -41,7 +41,7 @@ def default_dashboard_path() -> Path:
 
 
 def resolve_workspace_path(raw_path: str | os.PathLike[str] | None) -> Path:
-    candidate = Path(raw_path or workspace_root()).expanduser().resolve()
+    candidate = Path(raw_path or workspace_root()).resolve()
     for blocked in _BLOCKED_ROOTS:
         try:
             candidate.relative_to(blocked)

@@ -63,6 +63,6 @@ async def vibe_updates(websocket: WebSocket, task_id: str):
             await websocket.send_json(task)
             if task["status"] in {"completed", "completed_with_errors", "failed"}:
                 return
-            await asyncio.sleep(0.2)
+            await asyncio.sleep(0.5)
     except WebSocketDisconnect:
         return

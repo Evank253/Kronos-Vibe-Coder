@@ -18,6 +18,7 @@ _TOOL_SEVERITY = {
     "pylint": "LOW",
     "radon": "MEDIUM",
 }
+DEFAULT_TOOL_TIMEOUT = 20
 
 
 @dataclass(frozen=True)
@@ -76,6 +77,8 @@ class SwarmScanner:
     def _builtin_scan(self) -> list[Issue]:
         issues: list[Issue] = []
         secret_pattern = re.compile(r"(api[_-]?key|secret|token)\s*=\s*['\"]?[^'\"\s]+", re.IGNORECASE)
+        jwt_pattern = re.compile(r"eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9._-]+\.[A-Za-z0-9._-]+")
+        aws_pattern = re.compile(r"AKIA[0-9A-Z]{16}")
         for path in self.root_path.rglob("*"):
             if not path.is_file() or ".git" in path.parts:
                 continue
@@ -115,7 +118,7 @@ class SwarmScanner:
                         )
                         break
 
-            if path.name == ".env" or secret_pattern.search(content):
+            if path.name == ".env" or secret_pattern.search(content) or jwt_pattern.search(content) or aws_pattern.search(content):
                 issues.append(
                     Issue(
                         tool="builtin",
@@ -166,7 +169,7 @@ class SwarmScanner:
                 cwd=str(self.root_path),
                 capture_output=True,
                 text=True,
-                timeout=45,
+                timeout=DEFAULT_TOOL_TIMEOUT,
                 check=False,
             )
         except (OSError, subprocess.TimeoutExpired):

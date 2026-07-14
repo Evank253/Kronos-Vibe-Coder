@@ -85,11 +85,12 @@ class SwarmTaskManager:
             )
             pool = build_agent_pool()
             jobs = []
+            root_path = task["root_path"]
             for category, issues in grouped.items():
                 agent = pool.get(category)
                 if not agent:
                     continue
-                jobs.append((agent.name, lambda a=agent, i=issues: a.run(task["root_path"], i).to_dict()))
+                jobs.append((agent.name, lambda a=agent, i=issues, root=root_path: a.run(root, i).to_dict()))
             results = self.executor.run(jobs)
             merged = self._merge_results(results)
             summary = {

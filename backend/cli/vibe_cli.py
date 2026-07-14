@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import time
 import webbrowser
 
@@ -46,7 +47,8 @@ def command_deploy(args: argparse.Namespace) -> int:
 
 
 def command_dashboard(args: argparse.Namespace) -> int:
-    url = dashboard_url()
+    base_url = os.getenv("VIBE_DASHBOARD_BASE_URL", "http://127.0.0.1:8080")
+    url = base_url.rstrip("/") + dashboard_url()
     webbrowser.open(url)
     print(url)
     return 0

@@ -43,9 +43,8 @@ app.include_router(vibe_router)
 def home(request: Request):
     index_path = STATIC_DIR / "index.html"
     try:
-        with open(index_path, "r", encoding="utf-8") as f:
-            return HTMLResponse(f.read())
-    except Exception:
+        return HTMLResponse(index_path.read_text(encoding="utf-8"))
+    except OSError:
         return {"name": "Kronos Vibe Coder", "status": "online"}
 
 
