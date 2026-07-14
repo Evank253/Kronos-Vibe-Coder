@@ -94,7 +94,11 @@
           body: JSON.stringify({task_id: activeTaskId, write_files: false})
         });
         const payload = await response.json();
-        alert(`Merged ${payload.merged_result.files.length} files`);
+        const mergedCount = payload.merged_result?.files?.length;
+        if(typeof mergedCount !== 'number'){
+          return alert('Merge failed');
+        }
+        alert(`Merged ${mergedCount} files`);
       };
 
       if(activeTaskId){

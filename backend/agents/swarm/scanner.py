@@ -19,6 +19,8 @@ _TOOL_SEVERITY = {
     "radon": "MEDIUM",
 }
 DEFAULT_TOOL_TIMEOUT = 20
+MAX_LINE_LENGTH = 100
+MAX_BRANCH_COUNT = 20
 
 
 @dataclass(frozen=True)
@@ -104,7 +106,7 @@ class SwarmScanner:
                             )
                         )
                         break
-                    if len(line) > 100:
+                    if len(line) > MAX_LINE_LENGTH:
                         issues.append(
                             Issue(
                                 tool="builtin",
@@ -131,7 +133,7 @@ class SwarmScanner:
                 )
 
             if path.suffix == ".py":
-                if content.count("if ") + content.count("for ") + content.count("while ") > 20:
+                if content.count("if ") + content.count("for ") + content.count("while ") > MAX_BRANCH_COUNT:
                     issues.append(
                         Issue(
                             tool="builtin",

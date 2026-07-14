@@ -9,15 +9,16 @@ from backend.vibe_endpoints import TASK_MANAGER
 client = TestClient(app)
 
 
-def test_scan_and_fix_status_and_merge(tmp_path):
+def test_scan_and_fix_status_and_merge(tmp_path, monkeypatch):
     project = tmp_path / "project"
     project.mkdir()
     (project / "sample.py").write_text("def demo():\n\treturn 1  \n")
+    monkeypatch.setenv("GITHUB_WORKSPACE", str(project))
     csrf_token = client.get("/whoami").json()["csrf_token"]
 
     response = client.post(
         "/vibe/scan-and-fix",
-        json={"path": str(project)},
+        json={"path": "."},
         headers={"X-CSRF-Token": csrf_token},
     )
     assert response.status_code == 200

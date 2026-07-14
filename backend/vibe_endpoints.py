@@ -21,9 +21,9 @@ def scan_and_fix(data: dict[str, Any] | None = None):
         root_path = resolve_workspace_path(payload.get("path") or workspace_root())
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
-    if not Path(root_path).exists():
+    if not root_path.exists():
         raise HTTPException(status_code=404, detail="Path not found")
-    task = TASK_MANAGER.create_task(str(root_path))
+    task = TASK_MANAGER.create_task(root_path)
     return {
         "task_id": task["task_id"],
         "status": task["status"],

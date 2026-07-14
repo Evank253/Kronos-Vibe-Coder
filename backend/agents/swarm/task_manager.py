@@ -18,9 +18,10 @@ class SwarmTaskManager:
 
     def create_task(self, root_path: str | Path) -> dict:
         task_id = str(uuid.uuid4())
+        safe_root = str(root_path)
         task = {
             "task_id": task_id,
-            "root_path": str(Path(root_path).resolve()),
+            "root_path": safe_root,
             "status": "queued",
             "created_at": self._now(),
             "updated_at": self._now(),
@@ -123,7 +124,16 @@ class SwarmTaskManager:
         for result in results.values():
             for change in result.get("changes", []):
                 current = selected.get(change["path"])
-                if current is None or change.get("priority", 0) > current.get("priority", 0):
+                if current is None:
+                    selected[change["path"]] = change
+                    continue
+                if change.get("priority", 0) > current.get("priority", 0):
+                    selected[change["path"]] = change
+                    continue
+                if (
+                    change.get("priority", 0) == current.get("priority", 0)
+                    and change.get("agent", "") < current.get("agent", "")
+                ):
                     selected[change["path"]] = change
         ordered_changes = [selected[path] for path in sorted(selected)]
         diffs.extend(change.get("diff", "") for change in ordered_changes if change.get("diff"))

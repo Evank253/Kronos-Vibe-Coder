@@ -41,7 +41,10 @@ def default_dashboard_path() -> Path:
 
 
 def resolve_workspace_path(raw_path: str | os.PathLike[str] | None) -> Path:
-    candidate = Path(raw_path or workspace_root()).resolve()
+    requested = Path(str(raw_path or "."))
+    if requested.is_absolute():
+        raise ValueError("Path must be relative to the workspace root")
+    candidate = (workspace_root() / requested).resolve()
     for blocked in _BLOCKED_ROOTS:
         try:
             candidate.relative_to(blocked)
@@ -49,7 +52,7 @@ def resolve_workspace_path(raw_path: str | os.PathLike[str] | None) -> Path:
             continue
         raise ValueError(f"Path '{candidate}' is not allowed")
 
-    allowed_roots = [workspace_root(), Path("/tmp").resolve()]
+    allowed_roots = [workspace_root()]
     if is_codespace():
         workspaces = Path("/workspaces")
         if workspaces.exists():

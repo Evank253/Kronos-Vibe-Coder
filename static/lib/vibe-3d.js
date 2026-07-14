@@ -1,5 +1,6 @@
 (function(){
   const COLORS={CRITICAL:'#ff3366',HIGH:'#ff7a00',MEDIUM:'#00ccff',LOW:'#00ff88'};
+  const MIN_CANVAS_SIZE = 320;
   class VibeScene {
     constructor(canvas){
       this.canvas=canvas;
@@ -13,8 +14,8 @@
     }
     resize(){
       const rect=this.canvas.getBoundingClientRect();
-      this.canvas.width=Math.max(320, rect.width);
-      this.canvas.height=Math.max(320, rect.height);
+      this.canvas.width=Math.max(MIN_CANVAS_SIZE, rect.width);
+      this.canvas.height=Math.max(MIN_CANVAS_SIZE, rect.height);
     }
     update(snapshot){
       const issues=(snapshot.scan&&snapshot.scan.issues)||[];

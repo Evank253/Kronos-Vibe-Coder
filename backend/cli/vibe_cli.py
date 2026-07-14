@@ -22,14 +22,14 @@ def _wait_for_completion(task_id: str) -> dict:
 
 
 def command_scan(args: argparse.Namespace) -> int:
-    task = CLI_MANAGER.create_task(str(resolve_workspace_path(args.path)))
+    task = CLI_MANAGER.create_task(resolve_workspace_path(args.path))
     result = _wait_for_completion(task["task_id"])
     print(json.dumps(result, indent=2))
     return 0
 
 
 def command_fix(args: argparse.Namespace) -> int:
-    task = CLI_MANAGER.create_task(str(resolve_workspace_path(args.path)))
+    task = CLI_MANAGER.create_task(resolve_workspace_path(args.path))
     result = _wait_for_completion(task["task_id"])
     merged = CLI_MANAGER.finalize(task["task_id"], write_files=True)
     print(json.dumps({"task": result, "merge": merged}, indent=2))
@@ -49,19 +49,22 @@ def command_deploy(args: argparse.Namespace) -> int:
 def command_dashboard(args: argparse.Namespace) -> int:
     base_url = os.getenv("VIBE_DASHBOARD_BASE_URL", "http://127.0.0.1:8080")
     url = base_url.rstrip("/") + dashboard_url()
-    webbrowser.open(url)
+    opened = webbrowser.open(url)
     print(url)
-    return 0
+    return 0 if opened else 1
 
 
 def command_watch(args: argparse.Namespace) -> int:
-    task = CLI_MANAGER.create_task(str(resolve_workspace_path(args.path)))
-    while True:
+    task = CLI_MANAGER.create_task(resolve_workspace_path(args.path))
+    deadline = time.time() + 300
+    while time.time() < deadline:
         snapshot = CLI_MANAGER.get_task(task["task_id"])
         print(json.dumps(snapshot["summary"], indent=2))
         if snapshot["status"] in {"completed", "completed_with_errors", "failed"}:
             return 0
         time.sleep(0.5)
+    print(json.dumps({"task_id": task["task_id"], "status": "timeout"}, indent=2))
+    return 1
 
 
 def build_parser() -> argparse.ArgumentParser:

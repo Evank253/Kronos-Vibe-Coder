@@ -1,3 +1,5 @@
+import time
+
 from backend.agents.swarm.scanner import SwarmScanner
 from backend.agents.swarm.task_manager import SwarmTaskManager
 
@@ -79,10 +81,13 @@ def test_task_manager_prefers_higher_priority_change(tmp_path, monkeypatch):
     )
 
     task = manager.create_task(project)
-    while True:
+    deadline = time.time() + 5
+    while time.time() < deadline:
         snapshot = manager.get_task(task["task_id"])
         if snapshot["status"] in {"completed", "completed_with_errors", "failed"}:
             break
+    else:
+        raise AssertionError("swarm task did not complete in time")
 
     merged = snapshot["merged_result"]
     assert merged["changes"][0]["updated"] == "type\n"
