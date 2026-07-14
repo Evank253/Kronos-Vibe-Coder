@@ -1,0 +1,13 @@
+[tool.ruff]
+line-length = 79
+target-version = "py312"
+
+[tool.ruff.lint]
+# E = pycodestyle errors, F = pyflakes (closest to flake8 baseline)
+select = ["E", "F"]
+# E501 line-length violations are handled by ruff format, not lint
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

@@ -32,7 +32,4 @@ def generate_deployment_plan(report):
     if not steps:
         steps.append("Deployment configuration looks ready")
 
-    return {
-        "status": "plan_generated",
-        "steps": steps
-    }
+    return {"status": "plan_generated", "steps": steps}

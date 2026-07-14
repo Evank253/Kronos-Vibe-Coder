@@ -1,6 +1,5 @@
 import os
 from github import Github
-from github.GithubException import UnknownObjectException
 
 
 def get_github_client(token=None):
@@ -34,7 +33,9 @@ def create_branch(repo_full_name, branch_name, base_branch="main", token=None):
         }
 
 
-def commit_changes(repo_full_name, branch_name, commit_message, changes, token=None):
+def commit_changes(
+    repo_full_name, branch_name, commit_message, changes, token=None
+):
     gh = get_github_client(token)
     repo = gh.get_repo(repo_full_name)
     results = []
@@ -43,12 +44,13 @@ def commit_changes(repo_full_name, branch_name, commit_message, changes, token=N
         path = change["path"]
         content = change["content"]
         message = change.get("message", commit_message)
+
         def _commit_sha(obj):
-            if hasattr(obj, 'sha'):
-                return getattr(obj, 'sha')
+            if hasattr(obj, "sha"):
+                return getattr(obj, "sha")
             if isinstance(obj, dict):
                 # Github.py sometimes returns nested dicts
-                return obj.get('commit', {}).get('sha') or obj.get('sha')
+                return obj.get("commit", {}).get("sha") or obj.get("sha")
             return None
 
         try:
@@ -60,7 +62,17 @@ def commit_changes(repo_full_name, branch_name, commit_message, changes, token=N
                 file_content.sha,
                 branch=branch_name,
             )
-            results.append({"path": path, "action": "updated", "commit": _commit_sha(updated.get('commit') if isinstance(updated, dict) else updated)})
+            results.append(
+                {
+                    "path": path,
+                    "action": "updated",
+                    "commit": _commit_sha(
+                        updated.get("commit")
+                        if isinstance(updated, dict)
+                        else updated
+                    ),
+                }
+            )
         except Exception:
             # If file doesn't exist or another error occurred, create it
             created = repo.create_file(
@@ -69,7 +81,17 @@ def commit_changes(repo_full_name, branch_name, commit_message, changes, token=N
                 content,
                 branch=branch_name,
             )
-            results.append({"path": path, "action": "created", "commit": _commit_sha(created.get('commit') if isinstance(created, dict) else created)})
+            results.append(
+                {
+                    "path": path,
+                    "action": "created",
+                    "commit": _commit_sha(
+                        created.get("commit")
+                        if isinstance(created, dict)
+                        else created
+                    ),
+                }
+            )
 
     return {
         "status": "committed",
@@ -79,7 +101,9 @@ def commit_changes(repo_full_name, branch_name, commit_message, changes, token=N
     }
 
 
-def open_pull_request(repo_full_name, title, body, head, base="main", token=None):
+def open_pull_request(
+    repo_full_name, title, body, head, base="main", token=None
+):
     gh = get_github_client(token)
     repo = gh.get_repo(repo_full_name)
     pr = repo.create_pull(title=title, body=body, head=head, base=base)

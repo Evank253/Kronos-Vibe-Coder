@@ -2,7 +2,6 @@ import json
 import shutil
 import subprocess
 import tempfile
-from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -68,7 +67,10 @@ def detect_frameworks(path: Path):
     if package_json.exists():
         try:
             data = json.loads(package_json.read_text())
-            deps = {**data.get("dependencies", {}), **data.get("devDependencies", {})}
+            deps = {
+                **data.get("dependencies", {}),
+                **data.get("devDependencies", {}),
+            }
             if "next" in deps:
                 frameworks.add("Next.js")
             if "react" in deps:
@@ -88,8 +90,12 @@ def detect_frameworks(path: Path):
     pyproject = path / "pyproject.toml"
     if requirements.exists() or pyproject.exists() or any(path.rglob("*.py")):
         try:
-            requirements_text = requirements.read_text() if requirements.exists() else ""
-            pyproject_text = pyproject.read_text() if pyproject.exists() else ""
+            requirements_text = (
+                requirements.read_text() if requirements.exists() else ""
+            )
+            pyproject_text = (
+                pyproject.read_text() if pyproject.exists() else ""
+            )
             combined = requirements_text + "\n" + pyproject_text
             if "fastapi" in combined:
                 frameworks.add("FastAPI")
@@ -101,7 +107,11 @@ def detect_frameworks(path: Path):
             pass
 
     if not frameworks:
-        if (path / "package-lock.json").exists() or (path / "yarn.lock").exists() or (path / "pnpm-lock.yaml").exists():
+        if (
+            (path / "package-lock.json").exists()
+            or (path / "yarn.lock").exists()
+            or (path / "pnpm-lock.yaml").exists()
+        ):
             frameworks.add("JavaScript")
 
     return sorted(frameworks)
@@ -120,7 +130,11 @@ def count_dependencies(path: Path):
 
     requirements = path / "requirements.txt"
     if requirements.exists():
-        return sum(1 for line in requirements.read_text().splitlines() if line.strip() and not line.strip().startswith("#"))
+        return sum(
+            1
+            for line in requirements.read_text().splitlines()
+            if line.strip() and not line.strip().startswith("#")
+        )
 
     pyproject = path / "pyproject.toml"
     if pyproject.exists():
@@ -131,15 +145,25 @@ def count_dependencies(path: Path):
 
 
 def is_deployment_ready(path: Path):
-    if (path / "Dockerfile").exists() or (path / "docker-compose.yml").exists():
+    if (path / "Dockerfile").exists() or (
+        path / "docker-compose.yml"
+    ).exists():
         return True
 
-    workflows = list(path.glob(".github/workflows/*.yml")) + list(path.glob(".github/workflows/*.yaml"))
+    workflows = list(path.glob(".github/workflows/*.yml")) + list(
+        path.glob(".github/workflows/*.yaml")
+    )
     return len(workflows) > 0
 
 
 def detect_tests(path: Path):
-    test_patterns = ["test_*.py", "*_test.py", "pytest.ini", "tox.ini", "unittest"]
+    test_patterns = [
+        "test_*.py",
+        "*_test.py",
+        "pytest.ini",
+        "tox.ini",
+        "unittest",
+    ]
     for pattern in test_patterns:
         if any(path.rglob(pattern)):
             return True
@@ -156,7 +180,8 @@ def create_report(path: Path):
         "languages": detect_languages(path),
         "frameworks": detect_frameworks(path),
         "deployment_checks": {
-            "docker": (path / "Dockerfile").exists() or (path / "docker-compose.yml").exists(),
+            "docker": (path / "Dockerfile").exists()
+            or (path / "docker-compose.yml").exists(),
             "environment_file": (path / ".env").exists(),
             "tests": detect_tests(path),
         },
