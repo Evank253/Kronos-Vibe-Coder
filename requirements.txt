@@ -11,3 +11,8 @@ pytest-asyncio
 sentry-sdk
 python-multipart
 starlette
+httpx
+mypy
+bandit
+radon
+pylint

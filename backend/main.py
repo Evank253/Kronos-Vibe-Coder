@@ -3,6 +3,7 @@ from fastapi.responses import RedirectResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.sessions import SessionMiddleware
 from backend.csrf import CSRFMiddleware, ensure_csrf_in_session
+from backend.codespace_adapter import static_root
 import os
 import logging
 from backend.session_store import RedisSessionStore
@@ -20,25 +21,29 @@ from backend.agents.deployment_manager import build_check, deployment_config, re
 from backend.agents.fix_agent import generate_fix_plan, apply_fix_plan
 from backend.jobs import init_db, create_job, update_job_status, get_job
 from backend.agents.github_manager import create_branch, commit_changes, open_pull_request
+from backend.vibe_endpoints import router as vibe_router
 
 app = FastAPI(title="Kronos Vibe Coder")
 
 # Sessions (tokens are stored per-user in session after OAuth)
 SECRET_KEY = os.getenv("SESSION_SECRET", "dev-secret-key")
-app.add_middleware(SessionMiddleware, secret_key=SECRET_KEY)
-# add CSRF middleware after sessions
 app.add_middleware(CSRFMiddleware)
+app.add_middleware(SessionMiddleware, secret_key=SECRET_KEY)
+# Session middleware must wrap CSRF so the token is available on mutating requests.
 
 # Serve a small frontend under /ui
-if os.path.isdir("/workspaces/Kronos-Vibe-Coder/static"):
-    app.mount("/static", StaticFiles(directory="/workspaces/Kronos-Vibe-Coder/static"), name="static")
+STATIC_DIR = static_root()
+if STATIC_DIR.is_dir():
+    app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
+
+app.include_router(vibe_router)
 
 
 @app.get("/", response_class=HTMLResponse)
 def home(request: Request):
-    index_path = "/workspaces/Kronos-Vibe-Coder/static/index.html"
+    index_path = STATIC_DIR / "index.html"
     try:
-        with open(index_path, "r") as f:
+        with open(index_path, "r", encoding="utf-8") as f:
             return HTMLResponse(f.read())
     except Exception:
         return {"name": "Kronos Vibe Coder", "status": "online"}
