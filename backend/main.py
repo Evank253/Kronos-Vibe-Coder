@@ -60,8 +60,8 @@ LOG_LEVEL = os.getenv('LOG_LEVEL', 'INFO')
 logging.basicConfig(level=LOG_LEVEL, format='%(asctime)s %(levelname)s %(name)s %(message)s')
 logger = logging.getLogger('kronos')
 
-SECRETS = SecretsManager()
-if SECRETS.is_configured:
+secrets_manager = SecretsManager()
+if secrets_manager.is_configured:
     logger.info("Secrets vault enabled")
 else:
     logger.info("Secrets vault not configured; falling back to environment variables")
@@ -182,7 +182,7 @@ def deploy_release_approval(data: dict):
 
 @app.get("/github/login")
 def github_login(request: Request):
-    client_id = SECRETS.get_secret("GITHUB_OAUTH_CLIENT_ID")
+    client_id = secrets_manager.get_secret("GITHUB_OAUTH_CLIENT_ID")
     if not client_id:
         raise HTTPException(status_code=500, detail="GITHUB_OAUTH_CLIENT_ID not configured")
 
@@ -223,8 +223,8 @@ def github_callback(request: Request, code: str = None, state: str = None):
     if not code or state != expected:
         raise HTTPException(status_code=400, detail="Invalid OAuth callback")
 
-    client_id = SECRETS.get_secret("GITHUB_OAUTH_CLIENT_ID")
-    client_secret = SECRETS.get_secret("GITHUB_OAUTH_CLIENT_SECRET")
+    client_id = secrets_manager.get_secret("GITHUB_OAUTH_CLIENT_ID")
+    client_secret = secrets_manager.get_secret("GITHUB_OAUTH_CLIENT_SECRET")
     if not client_id or not client_secret:
         raise HTTPException(status_code=500, detail="OAuth client not configured")
 

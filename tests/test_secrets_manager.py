@@ -31,5 +31,5 @@ def test_rotate_master_key_reencrypts_existing_secrets(tmp_path):
     assert rotated.get_secret("AI_API_KEY") == "token-123"
 
     old_key_manager = SecretsManager(vault_path=vault_path, master_key="old-key")
-    with pytest.raises(RuntimeError):
+    with pytest.raises(RuntimeError, match="Unable to decrypt vault; check VAULT_MASTER_KEY"):
         old_key_manager.get_secret("AI_API_KEY")

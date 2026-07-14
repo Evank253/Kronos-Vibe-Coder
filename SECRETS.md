@@ -25,7 +25,7 @@ python -m backend.cli.vault_cli store GITHUB_OAUTH_CLIENT_SECRET
 python -m backend.cli.vault_cli store AI_API_KEY
 ```
 
-3. Retrieve a secret:
+3. Validate that a secret exists:
 
 ```bash
 python -m backend.cli.vault_cli retrieve GITHUB_OAUTH_CLIENT_SECRET

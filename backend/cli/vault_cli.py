@@ -22,8 +22,8 @@ def cmd_retrieve(args):
     manager = _get_manager(args)
     value = manager.get_secret(args.key)
     if value is None:
-        raise SystemExit(f"Secret not found: {args.key}")
-    print(value)
+        raise SystemExit(f"Secret not found in vault or environment: {args.key}")
+    print(f"Secret found: {args.key} (length={len(value)})")
 
 
 def cmd_rotate(args):
