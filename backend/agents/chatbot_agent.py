@@ -95,8 +95,13 @@ def _run_ruff(path: str) -> dict:
             "count": 0,
             "error": "ruff not installed",
         }
-    except Exception as exc:
-        return {"tool": "ruff", "issues": [], "count": 0, "error": str(exc)}
+    except Exception:
+        return {
+            "tool": "ruff",
+            "issues": [],
+            "count": 0,
+            "error": "check failed",
+        }
 
 
 def _run_pytest(path: str) -> dict:
@@ -118,8 +123,8 @@ def _run_pytest(path: str) -> dict:
         }
     except FileNotFoundError:
         return {"tool": "pytest", "error": "pytest not installed"}
-    except Exception as exc:
-        return {"tool": "pytest", "error": str(exc)}
+    except Exception:
+        return {"tool": "pytest", "error": "test run failed"}
 
 
 def analyze_path(path: str) -> dict:

@@ -12,6 +12,7 @@ from starlette.middleware.sessions import SessionMiddleware
 from backend.csrf import CSRFMiddleware, ensure_csrf_in_session
 import os
 import logging
+import re
 from backend.session_store import RedisSessionStore
 import threading
 import uuid
@@ -107,6 +108,16 @@ if os.getenv("REDIS_URL"):
 
 # Set to True via HTTPS_ONLY=1 in production so session cookies get secure flag
 _SECURE_COOKIES = os.getenv("HTTPS_ONLY", "0") == "1"
+
+# Session ID format: alphanumeric + hyphen/underscore, 8-256 chars
+_SESSION_ID_RE = re.compile(r"^[a-zA-Z0-9_-]{8,256}$")
+
+
+def _validated_sid(raw: str | None) -> str | None:
+    """Return raw only if it matches the expected session ID format."""
+    if raw and _SESSION_ID_RE.match(raw):
+        return raw
+    return None
 
 
 @app.get("/healthz")
@@ -267,7 +278,10 @@ def github_login(request: Request):
     redirect = url + "?" + "&".join([f"{k}={v}" for k, v in params.items()])
     # store state in server-side session if available, else cookie session
     if SESSION_STORE:
-        sid = request.cookies.get("session_id") or SESSION_STORE.new_session()
+        sid = (
+            _validated_sid(request.cookies.get("session_id"))
+            or SESSION_STORE.new_session()
+        )
         sess = SESSION_STORE.get(sid) or {}
         sess["oauth_state"] = state
         SESSION_STORE.set(sid, sess)
@@ -323,7 +337,10 @@ def github_callback(request: Request, code: str = None, state: str = None):
         )
 
     if SESSION_STORE:
-        sid = request.cookies.get("session_id") or SESSION_STORE.new_session()
+        sid = (
+            _validated_sid(request.cookies.get("session_id"))
+            or SESSION_STORE.new_session()
+        )
         sess = SESSION_STORE.get(sid) or {}
         sess["github_token"] = access_token
         SESSION_STORE.set(sid, sess)
