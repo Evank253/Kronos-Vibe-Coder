@@ -1,0 +1,13 @@
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+
+[tool.mypy]
+python_version = "3.12"
+ignore_missing_imports = true
+check_untyped_defs = false
+
+[tool.bandit]
+exclude_dirs = ["tests"]
+
+[tool.pylint.messages_control]
+disable = ["missing-module-docstring", "missing-function-docstring"]
