@@ -1,6 +1,7 @@
 __pycache__/
 *.pyc
 .env
+.secrets.vault
 uploads/
 .vscode/
 .pytest_cache/

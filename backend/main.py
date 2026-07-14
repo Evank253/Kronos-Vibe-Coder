@@ -20,6 +20,7 @@ from backend.agents.deployment_manager import build_check, deployment_config, re
 from backend.agents.fix_agent import generate_fix_plan, apply_fix_plan
 from backend.jobs import init_db, create_job, update_job_status, get_job
 from backend.agents.github_manager import create_branch, commit_changes, open_pull_request
+from backend.secrets_manager import SecretsManager
 
 app = FastAPI(title="Kronos Vibe Coder")
 
@@ -58,6 +59,12 @@ init_db()
 LOG_LEVEL = os.getenv('LOG_LEVEL', 'INFO')
 logging.basicConfig(level=LOG_LEVEL, format='%(asctime)s %(levelname)s %(name)s %(message)s')
 logger = logging.getLogger('kronos')
+
+SECRETS = SecretsManager()
+if SECRETS.is_configured:
+    logger.info("Secrets vault enabled")
+else:
+    logger.info("Secrets vault not configured; falling back to environment variables")
 
 # Optional Sentry
 SENTRY_DSN = os.getenv('SENTRY_DSN')
@@ -175,7 +182,7 @@ def deploy_release_approval(data: dict):
 
 @app.get("/github/login")
 def github_login(request: Request):
-    client_id = os.getenv("GITHUB_OAUTH_CLIENT_ID")
+    client_id = SECRETS.get_secret("GITHUB_OAUTH_CLIENT_ID")
     if not client_id:
         raise HTTPException(status_code=500, detail="GITHUB_OAUTH_CLIENT_ID not configured")
 
@@ -216,8 +223,8 @@ def github_callback(request: Request, code: str = None, state: str = None):
     if not code or state != expected:
         raise HTTPException(status_code=400, detail="Invalid OAuth callback")
 
-    client_id = os.getenv("GITHUB_OAUTH_CLIENT_ID")
-    client_secret = os.getenv("GITHUB_OAUTH_CLIENT_SECRET")
+    client_id = SECRETS.get_secret("GITHUB_OAUTH_CLIENT_ID")
+    client_secret = SECRETS.get_secret("GITHUB_OAUTH_CLIENT_SECRET")
     if not client_id or not client_secret:
         raise HTTPException(status_code=500, detail="OAuth client not configured")
 

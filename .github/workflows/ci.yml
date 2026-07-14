@@ -13,6 +13,10 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      VAULT_MASTER_KEY: ${{ secrets.VAULT_MASTER_KEY }}
+      AI_API_KEY: ${{ secrets.AI_API_KEY }}
+      GITHUB_OAUTH_CLIENT_SECRET: ${{ secrets.GITHUB_OAUTH_CLIENT_SECRET }}
 
     steps:
       - uses: actions/checkout@v4

@@ -2,6 +2,7 @@ fastapi
 uvicorn
 PyGithub
 pydantic
+cryptography
 pytest
 requests
 itsdangerous
