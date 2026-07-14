@@ -36,4 +36,5 @@ jobs:
       - name: Lint (flake8)
         run: |
           pip install flake8
-          flake8 --config=.flake8
+          # Keep lint settings inline so CI doesn't fail if .flake8 is absent on older commits/branches.
+          flake8 --max-line-length=200 --extend-ignore=E302,E303,E305,E306,E231,E252,F401,F841,W391
