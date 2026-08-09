@@ -1,7 +1,7 @@
-fastapi
-uvicorn
+fastapi==0.115.0
+uvicorn==0.30.6
 PyGithub
-pydantic
+pydantic==2.9.2
 pytest
 requests
 itsdangerous
@@ -10,7 +10,7 @@ pytest-mock
 pytest-asyncio
 sentry-sdk
 python-multipart
-starlette
+starlette==0.38.6
 httpx
 flake8
 mypy

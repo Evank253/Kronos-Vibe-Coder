@@ -38,3 +38,57 @@ jobs:
           pip install flake8
           # Keep lint settings inline so CI doesn't fail if .flake8 is absent on older commits/branches.
           flake8 --max-line-length=200 --extend-ignore=E302,E303,E305,E306,E231,E252,F401,F841,W391
+
+  align-with-developer:
+    name: Vibe Developer -> Coder dependency alignment
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: kronos-vibe-coder
+
+      - uses: actions/checkout@v4
+        with:
+          repository: Evank253/vibe-developer
+          path: vibe-developer
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Kronos-Vibe-Coder dependencies
+        run: |
+          cd kronos-vibe-coder
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Install and start Vibe Developer (runs first, auto-publishes pins)
+        run: |
+          cd vibe-developer
+          npm install
+          nohup node server/index.js > /tmp/vibe-developer.log 2>&1 &
+          sleep 3
+          cat /tmp/vibe-developer.log
+
+      - name: Wait for Developer, align deps, run smoke tests
+        env:
+          VIBE_DEVELOPER_URL: http://localhost:4000
+        run: |
+          cd kronos-vibe-coder
+          python scripts/align_with_developer.py
+
+      - name: Fail if alignment left requirements.txt dirty and uncommitted
+        run: |
+          cd kronos-vibe-coder
+          if ! git diff --quiet -- requirements.txt; then
+            echo "::error::requirements.txt drifted from the Vibe Developer contract and was not committed by align_with_developer.py. Run it locally and commit the result."
+            git diff -- requirements.txt
+            exit 1
+          fi
+

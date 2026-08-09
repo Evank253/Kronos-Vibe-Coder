@@ -1,8 +1,18 @@
 {
   "name": "Kronos Vibe Coder",
   "image": "mcr.microsoft.com/devcontainers/python:3.12",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "20"
+    }
+  },
   "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
-  "postCreateCommand": "pip install -r requirements.txt",
+  "postCreateCommand": "bash .devcontainer/postCreate.sh",
+  "forwardPorts": [4000, 8080],
+  "portsAttributes": {
+    "4000": { "label": "Vibe Developer (deps first)" },
+    "8080": { "label": "Kronos-Vibe-Coder" }
+  },
   "customizations": {
     "vscode": {
       "settings": {
