@@ -23,6 +23,8 @@ def collect_execution_evidence(
     result_payload = asdict(result)
     evidence = {
         "evidence_id": "exec-" + result.execution_id,
+        "request_payload": request_payload,
+        "result_payload": result_payload,
         "execution_id": result.execution_id,
         "request_id": request.request_id,
         "mission_id": request.mission_id,
