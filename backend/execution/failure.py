@@ -38,3 +38,12 @@ class ExecutionFailure:
     def __post_init__(self) -> None:
         if self.failure_class not in FAILURE_CLASSES:
             raise ValueError(f"unknown failure class: {self.failure_class}")
+
+
+def classify_nonzero_exit(phase: str) -> str:
+    """Map a failed command to its declared execution phase."""
+    return {
+        "test": "TEST_FAILED",
+        "build": "BUILD_FAILED",
+        "deploy": "DEPLOY_FAILED",
+    }.get(phase, "EXECUTION_FAILED")
