@@ -6,6 +6,7 @@ from datetime import datetime, timezone
 
 from ..contracts import ExecutionResult
 from ..environment import capture_environment
+from ..failure import classify_nonzero_exit
 
 
 def _now():
@@ -22,6 +23,7 @@ class LocalExecutionProvider:
         execution_id = str(uuid.uuid4())
         started = _now()
         environment = dict(capture_environment())
+        phase = str(request.inputs.get("phase", "execute")).lower()
         try:
             completed = subprocess.run(
                 list(request.command),
@@ -35,9 +37,7 @@ class LocalExecutionProvider:
             stdout = completed.stdout or ""
             stderr = completed.stderr or ""
             status = "EXECUTED" if completed.returncode == 0 else "FAILED"
-            failure = None if completed.returncode == 0 else (
-                "TIMEOUT" if False else "TEST_FAILED"
-            )
+            failure = None if completed.returncode == 0 else classify_nonzero_exit(phase)
             hashes = {
                 "stdout_sha256": hashlib.sha256(stdout.encode()).hexdigest(),
                 "stderr_sha256": hashlib.sha256(stderr.encode()).hexdigest(),
