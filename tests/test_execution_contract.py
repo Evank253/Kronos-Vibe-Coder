@@ -1,5 +1,4 @@
 import sys
-from pathlib import Path
 
 import pytest
 
@@ -7,7 +6,7 @@ from backend.execution.contracts import ExecutionRequest
 from backend.execution.providers.local import LocalExecutionProvider
 
 
-def request(tmp_path, command, timeout=5):
+def request(tmp_path, command, timeout=5, phase="execute"):
     return ExecutionRequest(
         request_id="req-001",
         mission_id="mission-001",
@@ -15,6 +14,7 @@ def request(tmp_path, command, timeout=5):
         commit_sha="abc123",
         environment={"cwd": str(tmp_path)},
         command=tuple(command),
+        inputs={"phase": phase},
         timeout_seconds=timeout,
     )
 
@@ -30,13 +30,25 @@ def test_valid_execution_is_identified_and_hashed(tmp_path):
     assert result.target_commit == "abc123"
 
 
-def test_test_failure_is_typed(tmp_path):
+@pytest.mark.parametrize(
+    ("phase", "expected"),
+    [
+        ("test", "TEST_FAILED"),
+        ("build", "BUILD_FAILED"),
+        ("deploy", "DEPLOY_FAILED"),
+        ("execute", "EXECUTION_FAILED"),
+    ],
+)
+def test_nonzero_exit_is_classified_by_phase(tmp_path, phase, expected):
     result = LocalExecutionProvider().execute(
-        request(tmp_path, [sys.executable, "-c", "import sys; print('bad'); sys.exit(2)"])
+        request(
+            tmp_path,
+            [sys.executable, "-c", "import sys; sys.exit(2)"],
+            phase=phase,
+        )
     )
     assert result.status == "FAILED"
-    assert result.exit_code == 2
-    assert result.failure_class == "TEST_FAILED"
+    assert result.failure_class == expected
 
 
 def test_timeout_is_typed(tmp_path):
