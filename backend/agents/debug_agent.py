@@ -4,12 +4,12 @@ from __future__ import annotations
 import ast
 import os
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 _SKIP = {".git", "node_modules", "__pycache__", ".venv", "venv", "dist", "build"}
 
 
-def debug_project(data: Dict[str, Any] | None = None) -> Dict[str, Any]:
+def debug_project(data: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
     data = data or {}
     repo = data.get("repo") or data.get("path") or "."
     root = Path(repo)
@@ -31,7 +31,10 @@ def debug_project(data: Dict[str, Any] | None = None) -> Dict[str, Any]:
             try:
                 text = fp.read_text(encoding="utf-8", errors="ignore")
             except OSError as exc:
-                issues.append({"path": str(fp.relative_to(root)), "issue": f"read_error: {exc}"})
+                issues.append({
+                    "path": str(fp.relative_to(root)),
+                    "issue": f"read_error: {exc}",
+                })
                 continue
             try:
                 ast.parse(text)

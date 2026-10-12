@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Request, UploadFile, File, Form, Response
+from fastapi import FastAPI, HTTPException, Request, UploadFile, File, Form
 from fastapi.responses import RedirectResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.sessions import SessionMiddleware
@@ -11,7 +11,7 @@ import threading
 import uuid
 import requests
 from github import Github
-from typing import List
+from typing import List, Optional
 
 from backend.agents.repo_analyzer import analyze_repo
 from backend.agents.debug_agent import debug_project
@@ -35,20 +35,6 @@ if STATIC_DIR.is_dir():
 
 app.include_router(vibe_router)
 
-
-@app.get("/", response_class=HTMLResponse)
-def home(request: Request):
-    index_path = STATIC_DIR / "index.html"
-    try:
-        return HTMLResponse(index_path.read_text(encoding="utf-8"))
-    except OSError:
-        return {"name": "Kronos Vibe Coder", "status": "online"}
-
-
-@app.get("/health")
-def health():
-    return {"status": "ok"}
-
 JOBS = {}
 init_db()
 
@@ -65,15 +51,27 @@ if SENTRY_DSN:
     except Exception:
         logger.exception("Failed to initialize Sentry")
 
-# Memory fallback when Redis is not configured
 SESSION_STORE = get_session_store()
 logger.info("Session store: %s", type(SESSION_STORE).__name__)
 
 
+@app.get("/", response_class=HTMLResponse)
+def home(request: Request):
+    index_path = STATIC_DIR / "index.html"
+    try:
+        return HTMLResponse(index_path.read_text(encoding="utf-8"))
+    except OSError:
+        return {"name": "Kronos Vibe Coder", "status": "online"}
+
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}
+
+
 @app.post("/analyze")
 def analyze(data: dict):
-    repo = data.get("repo", ".")
-    return analyze_repo(repo)
+    return analyze_repo(data.get("repo", "."))
 
 
 @app.post("/debug")
@@ -170,35 +168,27 @@ def github_login(request: Request):
         raise HTTPException(status_code=500, detail="GITHUB_OAUTH_CLIENT_ID not configured")
 
     state = str(uuid.uuid4())
-    params = {
-        "client_id": client_id,
-        "scope": "repo user",
-        "state": state,
-    }
-    redirect = "https://github.com/login/oauth/authorize?" + "&".join(f"{k}={v}" for k, v in params.items())
+    params = {"client_id": client_id, "scope": "repo user", "state": state}
+    redirect = "https://github.com/login/oauth/authorize?" + "&".join(
+        f"{k}={v}" for k, v in params.items()
+    )
 
-    if SESSION_STORE:
-        sid = request.cookies.get("session_id") or SESSION_STORE.new_session()
-        sess = SESSION_STORE.get(sid) or {}
-        sess["oauth_state"] = state
-        SESSION_STORE.set(sid, sess)
-        response = RedirectResponse(redirect)
-        response.set_cookie("session_id", sid, httponly=True)
-        return response
-
+    sid = request.cookies.get("session_id") or SESSION_STORE.new_session()
+    sess = SESSION_STORE.get(sid) or {}
+    sess["oauth_state"] = state
+    SESSION_STORE.set(sid, sess)
+    response = RedirectResponse(redirect)
+    response.set_cookie("session_id", sid, httponly=True)
     request.session["oauth_state"] = state
-    return RedirectResponse(redirect)
+    return response
 
 
 @app.get("/github/callback")
-def github_callback(request: Request, code: str = None, state: str = None):
-    expected = None
-    if SESSION_STORE:
-        sid = request.cookies.get("session_id")
-        if sid:
-            expected = (SESSION_STORE.get(sid) or {}).get("oauth_state")
-    else:
-        expected = request.session.get("oauth_state")
+def github_callback(request: Request, code: Optional[str] = None, state: Optional[str] = None):
+    expected = request.session.get("oauth_state")
+    sid = request.cookies.get("session_id")
+    if sid:
+        expected = (SESSION_STORE.get(sid) or {}).get("oauth_state") or expected
 
     if not code or state != expected:
         raise HTTPException(status_code=400, detail="Invalid OAuth callback")
@@ -217,35 +207,30 @@ def github_callback(request: Request, code: str = None, state: str = None):
     if not access_token:
         raise HTTPException(status_code=400, detail="Failed to obtain access token")
 
-    if SESSION_STORE:
-        sid = request.cookies.get("session_id") or SESSION_STORE.new_session()
-        sess = SESSION_STORE.get(sid) or {}
-        sess["github_token"] = access_token
-        SESSION_STORE.set(sid, sess)
-        response = RedirectResponse("/")
-        response.set_cookie("session_id", sid, httponly=True)
-        return response
-
+    sid = request.cookies.get("session_id") or SESSION_STORE.new_session()
+    sess = SESSION_STORE.get(sid) or {}
+    sess["github_token"] = access_token
+    SESSION_STORE.set(sid, sess)
     request.session["github_token"] = access_token
-    return RedirectResponse("/")
+    response = RedirectResponse("/")
+    response.set_cookie("session_id", sid, httponly=True)
+    return response
 
 
 @app.post("/github/logout")
 def github_logout(request: Request):
     request.session.pop("github_token", None)
     request.session.pop("oauth_state", None)
-    if SESSION_STORE:
-        sid = request.cookies.get("session_id")
-        if sid:
-            sess = SESSION_STORE.get(sid) or {}
-            sess.pop("github_token", None)
-            sess.pop("oauth_state", None)
-            SESSION_STORE.set(sid, sess)
+    sid = request.cookies.get("session_id")
+    if sid:
+        sess = SESSION_STORE.get(sid) or {}
+        sess.pop("github_token", None)
+        sess.pop("oauth_state", None)
+        SESSION_STORE.set(sid, sess)
     return {"status": "logged_out"}
 
 
 def _worker_run_job(job_id: str, repo_url: str):
-    """Scan + real fix plan; store real file changes for deploy_confirm."""
     JOBS[job_id]["status"] = "running"
     update_job_status(job_id, "running")
     try:
@@ -258,30 +243,29 @@ def _worker_run_job(job_id: str, repo_url: str):
             path = report.get("path") or (report.get("repository") or {}).get("path") or "."
 
         fix_plan = generate_fix_plan(path)
-        applied = apply_fix_plan(fix_plan)  # preview diffs
-
-        # Real source changes for GitHub commit (not a summary .txt)
+        applied = apply_fix_plan(fix_plan)
         changes = fixes_to_commit_changes(fix_plan)
         if not changes:
-            # Still produce a minimal note so deploy does not fail empty
             changes = [{
                 "path": f"kronos_fixes/{job_id[:8]}_no_auto_fixes.md",
                 "content": (
-                    f"# Kronos scan complete\n\nNo auto-applicable fixes.\n"
+                    "# Kronos scan complete\n\nNo auto-applicable fixes.\n"
                     f"Syntax errors noted: {len(fix_plan.get('syntax_errors') or [])}\n"
                 ),
                 "message": "Kronos scan – no auto fixes",
             }]
 
-        JOBS[job_id]["status"] = "completed"
-        JOBS[job_id]["report"] = report
-        JOBS[job_id]["path"] = path
-        JOBS[job_id]["fix_plan"] = fix_plan
-        JOBS[job_id]["applied"] = applied
-        JOBS[job_id]["changes"] = changes
-        update_job_status(job_id, "completed", {
+        JOBS[job_id].update({
+            "status": "completed",
             "report": report,
-            "fix_plan": {"fix_count": fix_plan.get("fix_count"), "syntax_errors": fix_plan.get("syntax_errors")},
+            "path": path,
+            "fix_plan": fix_plan,
+            "applied": applied,
+            "changes": changes,
+        })
+        update_job_status(job_id, "completed", {
+            "fix_count": fix_plan.get("fix_count"),
+            "syntax_errors": fix_plan.get("syntax_errors"),
             "change_count": len(changes),
         })
     except Exception as exc:
@@ -297,16 +281,20 @@ def _worker_run_files(job_id: str, path: str):
         report = analyze_repo(path)
         report["path"] = path
         fix_plan = generate_fix_plan(path)
-        applied = apply_fix_plan(fix_plan, target_root=path)  # apply for real on uploads
+        applied = apply_fix_plan(fix_plan, target_root=path)
         changes = fixes_to_commit_changes(fix_plan)
-
-        JOBS[job_id]["status"] = "completed"
-        JOBS[job_id]["report"] = report
-        JOBS[job_id]["path"] = path
-        JOBS[job_id]["fix_plan"] = fix_plan
-        JOBS[job_id]["applied"] = applied
-        JOBS[job_id]["changes"] = changes
-        update_job_status(job_id, "completed", {"fix_count": fix_plan.get("fix_count"), "change_count": len(changes)})
+        JOBS[job_id].update({
+            "status": "completed",
+            "report": report,
+            "path": path,
+            "fix_plan": fix_plan,
+            "applied": applied,
+            "changes": changes,
+        })
+        update_job_status(job_id, "completed", {
+            "fix_count": fix_plan.get("fix_count"),
+            "change_count": len(changes),
+        })
     except Exception as exc:
         logger.exception("upload job %s failed", job_id)
         JOBS[job_id]["status"] = "failed"
@@ -319,25 +307,22 @@ def submit_project(request: Request, data: dict):
     repo_url = data.get("url")
     if not repo_url:
         raise HTTPException(status_code=400, detail="Repository URL required")
-
     job_id = str(uuid.uuid4())
     JOBS[job_id] = {"status": "queued", "repo": repo_url}
     create_job(job_id, repo=repo_url, payload={"type": "repo", "url": repo_url})
-
-    thread = threading.Thread(target=_worker_run_job, args=(job_id, repo_url), daemon=True)
-    thread.start()
+    threading.Thread(target=_worker_run_job, args=(job_id, repo_url), daemon=True).start()
     return {"job_id": job_id, "status": "queued"}
 
 
 @app.get("/job_status/{job_id}")
 def job_status(job_id: str):
     job = JOBS.get(job_id)
-    if not job:
-        pj = get_job(job_id)
-        if pj:
-            return pj
-        raise HTTPException(status_code=404, detail="Job not found")
-    return job
+    if job:
+        return job
+    pj = get_job(job_id)
+    if pj:
+        return pj
+    raise HTTPException(status_code=404, detail="Job not found")
 
 
 @app.post("/deploy_confirm")
@@ -347,13 +332,10 @@ def deploy_confirm(request: Request, data: dict):
     if not job:
         raise HTTPException(status_code=404, detail="Job not found")
 
-    token = None
-    if SESSION_STORE:
-        sid = request.cookies.get("session_id")
-        if sid:
-            token = (SESSION_STORE.get(sid) or {}).get("github_token")
-    if not token:
-        token = request.session.get("github_token")
+    token = request.session.get("github_token")
+    sid = request.cookies.get("session_id")
+    if not token and sid:
+        token = (SESSION_STORE.get(sid) or {}).get("github_token")
     if not token:
         raise HTTPException(status_code=403, detail="Not authenticated with GitHub; please sign in")
 
@@ -367,13 +349,14 @@ def deploy_confirm(request: Request, data: dict):
 
     branch_name = f"kronos-fix-{job_id[:8]}"
     base = data.get("base", "main")
+    fix_count = (job.get("fix_plan") or {}).get("fix_count", len(changes))
 
     try:
         create_branch(repo_full, branch_name, base_branch=base, token=token)
         commit_resp = commit_changes(
             repo_full,
             branch_name,
-            f"Kronos automated fixes ({job.get('fix_plan', {}).get('fix_count', len(changes))} files)",
+            f"Kronos automated fixes ({fix_count} files)",
             changes,
             token=token,
         )
@@ -395,15 +378,13 @@ def deploy_confirm(request: Request, data: dict):
 def whoami(request: Request):
     ensure_csrf_in_session(request.session)
     token = request.session.get("github_token")
-    if not token and SESSION_STORE:
-        sid = request.cookies.get("session_id")
-        if sid:
-            token = (SESSION_STORE.get(sid) or {}).get("github_token")
+    sid = request.cookies.get("session_id")
+    if not token and sid:
+        token = (SESSION_STORE.get(sid) or {}).get("github_token")
     if not token:
         return {"authenticated": False, "csrf_token": request.session.get("csrf_token")}
     try:
-        gh = Github(token)
-        user = gh.get_user()
+        user = Github(token).get_user()
         return {
             "authenticated": True,
             "login": user.login,
@@ -416,33 +397,35 @@ def whoami(request: Request):
 
 
 @app.post("/upload_files")
-def upload_files(request: Request, files: List[UploadFile] = File(None), text: str = Form(None)):
+def upload_files(
+    request: Request,
+    files: Optional[List[UploadFile]] = File(None),
+    text: Optional[str] = Form(None),
+):
     if not files and not text:
         raise HTTPException(status_code=400, detail="No files or text provided")
 
     job_id = str(uuid.uuid4())
-    base_uploads = os.path.join(os.getcwd(), "uploads")
-    upload_dir = os.path.join(base_uploads, job_id)
+    upload_dir = os.path.join(os.getcwd(), "uploads", job_id)
     os.makedirs(upload_dir, exist_ok=True)
 
-    MAX_FILE_SIZE = 2 * 1024 * 1024
-    MAX_TOTAL = 10 * 1024 * 1024
+    max_file = 2 * 1024 * 1024
+    max_total = 10 * 1024 * 1024
     total = 0
 
-    def _sanitize_name(name: str) -> str:
+    def _sanitize(name: str) -> str:
         keep = [ch for ch in (name or "file") if ch.isalnum() or ch in "._-"]
         return "".join(keep) or "file"
 
     if files:
         for up in files:
             content = up.file.read()
-            if len(content) > MAX_FILE_SIZE:
+            if len(content) > max_file:
                 raise HTTPException(status_code=400, detail=f"File too large: {up.filename}")
             total += len(content)
-            if total > MAX_TOTAL:
+            if total > max_total:
                 raise HTTPException(status_code=400, detail="Total upload size exceeded")
-            dest = os.path.join(upload_dir, _sanitize_name(up.filename))
-            with open(dest, "wb") as f:
+            with open(os.path.join(upload_dir, _sanitize(up.filename)), "wb") as f:
                 f.write(content)
 
     if text:
@@ -452,6 +435,5 @@ def upload_files(request: Request, files: List[UploadFile] = File(None), text: s
     JOBS[job_id] = {"status": "queued", "upload_dir": upload_dir}
     create_job(job_id, upload_dir=upload_dir, payload={"type": "upload"})
     update_job_status(job_id, "queued")
-    thread = threading.Thread(target=_worker_run_files, args=(job_id, upload_dir), daemon=True)
-    thread.start()
+    threading.Thread(target=_worker_run_files, args=(job_id, upload_dir), daemon=True).start()
     return {"job_id": job_id, "status": "queued"}
