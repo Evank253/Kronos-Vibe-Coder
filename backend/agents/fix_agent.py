@@ -4,9 +4,8 @@ Real fix agent – generates and applies actual file changes.
 Capabilities:
 - Normalize whitespace (tabs → spaces, strip trailing, ensure EOF newline)
 - Python AST syntax validation (flag files that fail to parse)
-- Simple safe rewrites: bare `except:` → `except Exception:`,
-  obvious `print(` debug leftovers can be flagged (not auto-removed by default)
-- Produces unified diffs for preview and real writes when target_root is set
+- Safe rewrite: bare `except:` → `except Exception:`
+- Unified diffs for preview; real writes when target_root is set
 """
 from __future__ import annotations
 
@@ -15,17 +14,31 @@ import ast
 import difflib
 import os
 import re
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Set
+
+_SKIP_DIR_NAMES: Set[str] = {
+    ".git", "node_modules", "__pycache__", ".venv", "venv",
+    "dist", "build", ".tox", ".mypy_cache", ".pytest_cache", "coverage",
+}
+
+
+def _should_skip_dir(dirpath: str) -> bool:
+    parts = set(os.path.normpath(dirpath).split(os.sep))
+    return bool(parts & _SKIP_DIR_NAMES)
 
 
 def _normalize_text(s: str) -> str:
+    if s == "":
+        return s
     lines = s.splitlines()
     new_lines = [line.replace("\t", "    ").rstrip() for line in lines]
-    return "\n".join(new_lines) + "\n"
+    text = "\n".join(new_lines)
+    if not text.endswith("\n"):
+        text += "\n"
+    return text
 
 
 def _fix_bare_except(s: str) -> str:
-    """Replace bare `except:` with `except Exception:` (safe, common lint fix)."""
     return re.sub(r"(?m)^(\s*)except\s*:\s*$", r"\1except Exception:", s)
 
 
@@ -38,7 +51,6 @@ def _python_syntax_ok(s: str) -> bool:
 
 
 def _apply_safe_python_fixes(orig: str) -> tuple[str, List[str]]:
-    """Return (new_text, list_of_fix_tags)."""
     tags: List[str] = []
     new = _normalize_text(orig)
     if new != orig:
@@ -49,11 +61,9 @@ def _apply_safe_python_fixes(orig: str) -> tuple[str, List[str]]:
         tags.append("bare_except")
         new = fixed_except
 
-    # Only keep the result if it still parses (or original also failed)
-    if new.endswith(".py") or True:
-        if _python_syntax_ok(orig) and not _python_syntax_ok(new):
-            # Revert dangerous change
-            return orig, []
+    # Keep only if we did not break previously valid Python
+    if _python_syntax_ok(orig) and not _python_syntax_ok(new):
+        return orig, []
     return new, tags
 
 
@@ -61,9 +71,9 @@ def generate_fix_plan_for_path(root_path: str, *, include_syntax_errors: bool = 
     fixes: List[Dict[str, Any]] = []
     syntax_errors: List[Dict[str, str]] = []
 
-    for dirpath, _, filenames in os.walk(root_path):
-        # Skip common noise
-        if any(skip in dirpath for skip in (".git", "node_modules", "__pycache__", ".venv", "venv", "dist", "build")):
+    for dirpath, dirnames, filenames in os.walk(root_path):
+        dirnames[:] = [d for d in dirnames if d not in _SKIP_DIR_NAMES]
+        if _should_skip_dir(dirpath):
             continue
         for fn in filenames:
             if not fn.endswith((".py", ".md", ".txt", ".cfg", ".ini", ".yml", ".yaml")):
@@ -118,16 +128,15 @@ def generate_fix_plan(review_or_path) -> Dict[str, Any]:
 
 
 def apply_fix_plan(fix_plan: Dict[str, Any], target_root: Optional[str] = None) -> Dict[str, Any]:
-    """
-    Apply fixes for real when target_root is set; otherwise return unified diffs.
-    """
     applied = []
     for item in fix_plan.get("fixes", []):
         path = item["path"]
         updated = item["updated"]
         if target_root:
             dest = os.path.join(target_root, path)
-            os.makedirs(os.path.dirname(dest) or ".", exist_ok=True)
+            parent = os.path.dirname(dest)
+            if parent:
+                os.makedirs(parent, exist_ok=True)
             with open(dest, "w", encoding="utf-8") as f:
                 f.write(updated)
             applied.append({
@@ -149,7 +158,6 @@ def apply_fix_plan(fix_plan: Dict[str, Any], target_root: Optional[str] = None) 
 
 
 def fixes_to_commit_changes(fix_plan: Dict[str, Any]) -> List[Dict[str, str]]:
-    """Convert a fix plan into the shape expected by github_manager.commit_changes."""
     return [
         {
             "path": item["path"],
